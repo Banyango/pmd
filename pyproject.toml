@@ -3,7 +3,7 @@ name = "pmd"
 version = "0.1.0"
 description = "A lightweight markup language and Python library for writing, composing, and rendering structured LLM prompts."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
     { name = "Kyle Reczek", email = "kyle@banyango.com" }
@@ -17,7 +17,12 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
     "Typing :: Typed",
 ]
@@ -89,7 +94,7 @@ exclude_lines = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py39"
 src = ["src", "tests"]
 exclude = ["examples"]
 
@@ -125,7 +130,7 @@ ignore = [
 known-first-party = ["pmd"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.10"
 strict = true
 warn_return_any = true
 warn_unused_configs = true

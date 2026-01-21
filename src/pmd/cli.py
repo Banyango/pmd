@@ -3,6 +3,7 @@
 import json
 import sys
 from pathlib import Path
+from typing import Optional
 
 import click
 
@@ -38,9 +39,9 @@ def main():
 @click.option("--show-metadata", is_flag=True, help="Display template metadata before rendering")
 def render(
     template_path: Path,
-    output: Path | None,
-    context: str | None,
-    context_file: Path | None,
+    output: Optional[Path],
+    context: Optional[str],
+    context_file: Optional[Path],
     show_metadata: bool,
 ):
     """Render a pmd template file or directory to markdown.
@@ -109,7 +110,7 @@ def render(
 
 
 def _render_single_file(
-    template_file: Path, output: Path | None, context_dict: dict, show_metadata: bool
+    template_file: Path, output: Optional[Path], context_dict: dict, show_metadata: bool
 ):
     """Render a single template file."""
     # Read the template file
