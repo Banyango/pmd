@@ -1,17 +1,6 @@
-# Basic Python Usage
-
-First, import the necessary components:
-
-```python
-from pathlib import Path
 from pmd.parser import PmdParser
 from pmd.renderer import PmdRenderer
-```
 
-Render a template programmatically:
-
-```python
-# Define your template
 template = """
 You are a helpful assistant.
 
@@ -30,12 +19,10 @@ parser = PmdParser()
 metadata, nodes = parser.parse(template)
 
 # Create a renderer with context
-renderer = PmdRenderer(context={
-    "task": "Summarize the key points",
-    "context": "User is researching AI agents"
-})
+renderer = PmdRenderer(
+    context={"task": "Summarize the key points", "context": "User is researching AI agents"}
+)
 
 # Render the output
 prompt = renderer.render(nodes)
 print(prompt)
-```

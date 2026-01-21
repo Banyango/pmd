@@ -6,18 +6,18 @@ PMD's include functionality allows you to compose templates from reusable snippe
 
 ### Setting Up the Renderer
 
-The key to using includes is setting the `base_path` parameter when creating a `PMDRenderer`. This tells PMD where to resolve relative include paths:
+The key to using includes is setting the `base_path` parameter when creating a `PmdRenderer`. This tells PMD where to resolve relative include paths:
 
 ```python
 from pathlib import Path
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 # Define base path for includes
 template_dir = Path("./templates")
 
 # Parse your main template
-parser = PMDParser()
+parser = PmdParser()
 template_content = """
 {% include "header.pmd" %}
 
@@ -29,7 +29,7 @@ Main content here.
 metadata, nodes = parser.parse(template_content)
 
 # Create renderer with base_path
-renderer = PMDRenderer(
+renderer = PmdRenderer(
     context={"app_name": "MyApp"},
     base_path=template_dir
 )
@@ -71,8 +71,8 @@ Timestamp: {{timestamp}}
 
 ```python
 from pathlib import Path
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 # Main template that composes snippets
 main_template = """
@@ -88,10 +88,10 @@ main_template = """
 """
 
 # Parse and render
-parser = PMDParser()
+parser = PmdParser()
 _, nodes = parser.parse(main_template)
 
-renderer = PMDRenderer(
+renderer = PmdRenderer(
     context={
         "role": "technical expert",
         "user_name": "Alice",
@@ -111,66 +111,16 @@ print(prompt)
 
 ## Dynamic Include Loading
 
-### Template Manager Pattern
+### PmdComposer
 
-Build a template manager class to handle snippet loading and caching:
+Include complex prompts dynamically using `PmdComposer`:
 
 ```python
 from pathlib import Path
-from typing import Dict, Optional
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
-
-
-class TemplateManager:
-    """Manage PMD templates and snippets with caching."""
-
-    def __init__(self, template_dir: Path):
-        self.template_dir = template_dir
-        self.parser = PMDParser()
-        self._template_cache: Dict[str, tuple] = {}
-
-    def load_template(self, template_path: str) -> tuple:
-        """Load and parse a template file with caching."""
-        cache_key = str(template_path)
-
-        if cache_key not in self._template_cache:
-            full_path = self.template_dir / template_path
-            content = full_path.read_text()
-            parsed = self.parser.parse(content)
-            self._template_cache[cache_key] = parsed
-
-        return self._template_cache[cache_key]
-
-    def render(self, template_path: str, context: dict) -> str:
-        """Render a template with the given context."""
-        _, nodes = self.load_template(template_path)
-
-        renderer = PMDRenderer(
-            context=context,
-            base_path=self.template_dir
-        )
-
-        return renderer.render(nodes)
-
-    def compose_prompt(
-        self,
-        snippets: list[str],
-        context: dict,
-        separator: str = "\n\n"
-    ) -> str:
-        """Compose a prompt from multiple snippet files."""
-        parts = []
-
-        for snippet in snippets:
-            rendered = self.render(snippet, context)
-            parts.append(rendered)
-
-        return separator.join(parts)
-
+from pmd.composer import PmdComposer
 
 # Usage
-manager = TemplateManager(Path("./templates"))
+manager = PmdComposer(Path("./templates"))
 
 # Compose a complex prompt from multiple snippets
 prompt = manager.compose_prompt(
@@ -214,11 +164,11 @@ template = """
 {% endif %}
 """
 
-parser = PMDParser()
+parser = PmdParser()
 _, nodes = parser.parse(template)
 
 # Render with detailed mode
-renderer = PMDRenderer(
+renderer = PmdRenderer(
     context={
         "role": "assistant",
         "use_examples": True,
@@ -233,37 +183,141 @@ prompt = renderer.render(nodes)
 
 ## Nested Includes
 
-Includes can reference other includes, creating a hierarchy of snippets:
+Includes can reference other includes, creating a hierarchy of snippets. **Important**: All include paths are always resolved relative to the `base_path` set in the renderer, not relative to the file doing the including.
+
+### Understanding Base Path Resolution
+
+Given this directory structure:
+
+```
+templates/
+  main.pmd
+  snippets/
+    complete_prompt.pmd
+    header_section.pmd
+    system_role.pmd
+    safety_guidelines.pmd
+    body_section.pmd
+    footer_section.pmd
+```
 
 **templates/snippets/complete_prompt.pmd**:
 ```pmd
-{% include "header_section.pmd" %}
+{% include "snippets/header_section.pmd" %}
 
-{% include "body_section.pmd" %}
+{% include "snippets/body_section.pmd" %}
 
-{% include "footer_section.pmd" %}
+{% include "snippets/footer_section.pmd" %}
 ```
 
 **templates/snippets/header_section.pmd**:
 ```pmd
-{% include "system_role.pmd" %}
+{% include "snippets/system_role.pmd" %}
 
-{% include "safety_guidelines.pmd" %}
+{% include "snippets/safety_guidelines.pmd" %}
 ```
 
+Notice that even though `header_section.pmd` is in the `snippets/` directory, it **still uses `"snippets/system_role.pmd"`** in its include statement, not just `"system_role.pmd"`. This is because all paths are resolved from `base_path`.
+
+### Example: Nested Include Rendering
+
 ```python
-# All nested includes are resolved automatically
-parser = PMDParser()
+from pathlib import Path
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
+
+# Parse the main template
+parser = PmdParser()
 _, nodes = parser.parse('{% include "snippets/complete_prompt.pmd" %}')
 
-renderer = PMDRenderer(
+# Set base_path to templates/
+renderer = PmdRenderer(
     context={"role": "assistant"},
     base_path=Path("./templates")
 )
 
-# Renders the complete hierarchy
+# All includes are resolved from ./templates/
+# - snippets/complete_prompt.pmd -> ./templates/snippets/complete_prompt.pmd
+# - snippets/header_section.pmd -> ./templates/snippets/header_section.pmd
+# - snippets/system_role.pmd -> ./templates/snippets/system_role.pmd
 output = renderer.render(nodes)
 ```
+
+### Deep Nesting Example
+
+You can nest includes as deeply as needed:
+
+**templates/layouts/full_prompt.pmd**:
+```pmd
+{% include "sections/preamble.pmd" %}
+
+{% include "sections/main_content.pmd" %}
+
+{% include "sections/conclusion.pmd" %}
+```
+
+**templates/sections/preamble.pmd**:
+```pmd
+{% include "components/header.pmd" %}
+
+{% include "components/instructions.pmd" %}
+```
+
+**templates/components/header.pmd**:
+```pmd
+{% include "atoms/logo.pmd" %}
+
+{% include "atoms/title.pmd" %}
+```
+
+```python
+# All paths resolve from base_path, no matter how deep the nesting
+parser = PmdParser()
+_, nodes = parser.parse('{% include "layouts/full_prompt.pmd" %}')
+
+renderer = PmdRenderer(
+    context={"title": "My Prompt"},
+    base_path=Path("./templates")
+)
+
+output = renderer.render(nodes)
+```
+
+### Why Base Path Matters
+
+This design makes your templates portable and predictable:
+
+```python
+# ✅ CORRECT: All paths from base_path
+# templates/snippets/section.pmd contains:
+{% include "snippets/subsection.pmd" %}
+
+# ❌ WRONG: Don't use relative paths from the current file
+# templates/snippets/section.pmd should NOT contain:
+{% include "subsection.pmd" %}  # This won't work!
+```
+
+### Practical Tip: Organizing Nested Structures
+
+Use consistent path prefixes to make nested includes clear:
+
+```
+templates/
+  prompts/
+    agent/
+      researcher.pmd    -> includes "components/agent/..."
+      analyzer.pmd      -> includes "components/agent/..."
+  components/
+    agent/
+      role.pmd          -> includes "atoms/agent/..."
+      tools.pmd         -> includes "atoms/agent/..."
+  atoms/
+    agent/
+      identity.pmd
+      capabilities.pmd
+```
+
+This structure makes it obvious that all includes use the full path from `templates/`.
 
 ## Error Handling
 
@@ -271,17 +325,17 @@ Always handle include errors gracefully:
 
 ```python
 from pathlib import Path
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 
 def safe_render(template_content: str, context: dict, base_path: Path) -> str:
     """Safely render a template with error handling."""
     try:
-        parser = PMDParser()
+        parser = PmdParser()
         _, nodes = parser.parse(template_content)
 
-        renderer = PMDRenderer(context=context, base_path=base_path)
+        renderer = PmdRenderer(context=context, base_path=base_path)
         return renderer.render(nodes)
 
     except FileNotFoundError as e:
@@ -379,7 +433,7 @@ Parse templates once, render many times:
 class OptimizedRenderer:
     def __init__(self, template_dir: Path):
         self.template_dir = template_dir
-        self.parser = PMDParser()
+        self.parser = PmdParser()
         self.parsed_cache = {}
 
     def get_nodes(self, template_content: str):
@@ -393,7 +447,7 @@ class OptimizedRenderer:
 
     def render(self, template_content: str, context: dict) -> str:
         nodes = self.get_nodes(template_content)
-        renderer = PMDRenderer(context=context, base_path=self.template_dir)
+        renderer = PmdRenderer(context=context, base_path=self.template_dir)
         return renderer.render(nodes)
 ```
 
@@ -401,8 +455,8 @@ class OptimizedRenderer:
 
 ```python
 from pathlib import Path
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 
 class AgentPromptBuilder:
@@ -410,13 +464,13 @@ class AgentPromptBuilder:
 
     def __init__(self, snippets_dir: Path):
         self.snippets_dir = snippets_dir
-        self.parser = PMDParser()
+        self.parser = PmdParser()
 
     def build_agent_prompt(
-        self,
-        agent_type: str,
-        task: str,
-        context: dict
+            self,
+            agent_type: str,
+            task: str,
+            context: dict
     ) -> str:
         """Build a prompt for a specific agent type."""
 
@@ -451,7 +505,7 @@ class AgentPromptBuilder:
 
         # Render
         _, nodes = self.parser.parse(template)
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context=context,
             base_path=self.snippets_dir
         )

@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 from typing import Any
 
 
@@ -51,9 +51,7 @@ class MetadataNode(Node):
 # -------------------------
 # Parser
 # -------------------------
-class PMDParser:
-    """Parser for PMD templates."""
-
+class PmdParser:
     def __init__(self):
         self.metadata: dict[str, str] = {}
         self.tokens: list[tuple[str, Any]] = []

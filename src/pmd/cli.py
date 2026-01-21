@@ -6,8 +6,8 @@ from pathlib import Path
 
 import click
 
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 
 @click.group()
@@ -88,10 +88,14 @@ def render(
             try:
                 context_dict = json.loads(auto_context_file.read_text())
             except json.JSONDecodeError as e:
-                click.echo(f"Error parsing auto-detected context file {auto_context_file}: {e}", err=True)
+                click.echo(
+                    f"Error parsing auto-detected context file {auto_context_file}: {e}", err=True
+                )
                 sys.exit(1)
             except Exception as e:
-                click.echo(f"Error reading auto-detected context file {auto_context_file}: {e}", err=True)
+                click.echo(
+                    f"Error reading auto-detected context file {auto_context_file}: {e}", err=True
+                )
                 sys.exit(1)
 
     # Determine if we're processing a file or directory
@@ -117,7 +121,7 @@ def _render_single_file(
 
     # Parse the template
     try:
-        parser = PMDParser()
+        parser = PmdParser()
         metadata, nodes = parser.parse(template_content)
     except Exception as e:
         click.echo(f"Error parsing template: {e}", err=True)
@@ -132,7 +136,7 @@ def _render_single_file(
 
     # Render the template
     try:
-        renderer = PMDRenderer(context=context_dict, base_path=template_file.parent)
+        renderer = PmdRenderer(context=context_dict, base_path=template_file.parent)
         result = renderer.render(nodes)
     except Exception as e:
         click.echo(f"Error rendering template: {e}", err=True)
@@ -183,10 +187,16 @@ def _render_directory(
                 try:
                     file_context = json.loads(auto_context_file.read_text())
                 except json.JSONDecodeError as e:
-                    click.echo(f"Error parsing auto-detected context file {auto_context_file}: {e}", err=True)
+                    click.echo(
+                        f"Error parsing auto-detected context file {auto_context_file}: {e}",
+                        err=True,
+                    )
                     sys.exit(1)
                 except Exception as e:
-                    click.echo(f"Error reading auto-detected context file {auto_context_file}: {e}", err=True)
+                    click.echo(
+                        f"Error reading auto-detected context file {auto_context_file}: {e}",
+                        err=True,
+                    )
                     sys.exit(1)
 
         _render_single_file(template_file, output_file, file_context, show_metadata)
@@ -228,7 +238,7 @@ def _show_metadata_single_file(template_file: Path):
 
     # Parse the template
     try:
-        parser = PMDParser()
+        parser = PmdParser()
         metadata_dict, _ = parser.parse(template_content)
     except Exception as e:
         click.echo(f"Error parsing template: {e}", err=True)
@@ -260,7 +270,7 @@ def _show_metadata_directory(template_dir: Path):
 
         try:
             template_content = template_file.read_text()
-            parser = PMDParser()
+            parser = PmdParser()
             metadata_dict, _ = parser.parse(template_content)
 
             if metadata_dict:

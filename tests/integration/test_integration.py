@@ -8,8 +8,8 @@ import pathlib
 
 import pytest
 
-from pmd.parser import PMDParser
-from pmd.render.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
 
 
 class TestPmdIntegration:
@@ -18,7 +18,7 @@ class TestPmdIntegration:
     @pytest.fixture
     def parser(self):
         """Create a fresh parser instance."""
-        return PMDParser()
+        return PmdParser()
 
     @pytest.fixture
     def files_dir(self):
@@ -35,7 +35,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with context
-        renderer = PMDRenderer(context={"name": "Alice"})
+        renderer = PmdRenderer(context={"name": "Alice"})
         result = renderer.render(nodes)
 
         # Expected output
@@ -58,7 +58,7 @@ class TestPmdIntegration:
         assert metadata["version"] == "2.0"
 
         # Render with context
-        renderer = PMDRenderer(context={"document": "This is a sample document to summarize."})
+        renderer = PmdRenderer(context={"document": "This is a sample document to summarize."})
         result = renderer.render(nodes)
 
         # Expected output
@@ -83,7 +83,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with authenticated context
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context={"is_authenticated": True, "username": "Bob", "status": "Premium"}
         )
         result = renderer.render(nodes)
@@ -112,7 +112,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with unauthenticated context
-        renderer = PMDRenderer(context={"is_authenticated": False})
+        renderer = PmdRenderer(context={"is_authenticated": False})
         result = renderer.render(nodes)
 
         # Expected output
@@ -137,7 +137,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with items
-        renderer = PMDRenderer(context={"items": ["Apple", "Banana", "Cherry"]})
+        renderer = PmdRenderer(context={"items": ["Apple", "Banana", "Cherry"]})
         result = renderer.render(nodes)
 
         # Expected output
@@ -164,7 +164,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with empty items
-        renderer = PMDRenderer(context={"items": []})
+        renderer = PmdRenderer(context={"items": []})
         result = renderer.render(nodes)
 
         # Expected output (loop body should not appear)
@@ -186,11 +186,14 @@ class TestPmdIntegration:
         assert metadata["owner"] == "ai-team"
 
         # Render with context (has_context=True, format_json=False)
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context={
                 "task_type": "question answering",
                 "has_context": True,
-                "documents": ["Doc1", "Doc2"],
+                "documents": [
+                    {"title": "Doc1", "content": "Available"},
+                    {"title": "Doc2", "content": "Available"},
+                ],
                 "query": "What is the capital of France?",
                 "format_json": False,
             }
@@ -201,21 +204,25 @@ class TestPmdIntegration:
         expected = (
             "\n"
             "# System Prompt\n"
-            "You are an AI assistant helping with question answering.\n\n"
+            "You are an AI assistant helping with question answering.\n"
+            "\n"
             "# Instructions\n"
-            "Use the following context to answer:\n\n"
-            "Document Doc1:\n"
+            "Use the following context to answer:\n"
+            "\n"
+            "Document {'title': 'Doc1', 'content': 'Available'}:\n"
             "- Title: Doc1\n"
             "- Content: Available\n"
-            "Document Doc2:\n"
+            "Document {'title': 'Doc2', 'content': 'Available'}:\n"
             "- Title: Doc2\n"
             "- Content: Available\n"
             "\n"
             "# User Query\n"
-            "What is the capital of France?\n\n"
+            "What is the capital of France?\n"
+            "\n"
             "# Output Format\n"
             "Provide your response in plain text.\n"
-            "\n\n"
+            "\n"
+            "\n"
             "# Additional Notes\n"
             "- Be concise\n"
             "- Be accurate\n"
@@ -235,7 +242,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with context (has_context=False, format_json=True)
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context={
                 "task_type": "general inquiry",
                 "has_context": False,
@@ -278,7 +285,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with show_categories=True, show_items=True
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context={
                 "show_categories": True,
                 "categories": ["Electronics", "Books"],
@@ -319,7 +326,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with show_categories=True, show_items=False
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context={"show_categories": True, "categories": ["Electronics"], "show_items": False}
         )
         result = renderer.render(nodes)
@@ -339,7 +346,6 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_include_template(self, parser, files_dir):
-        """Test include.pmd with include directives."""
         template_file = files_dir / "include.pmd"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
@@ -348,16 +354,26 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render
-        renderer = PMDRenderer(context={"content": "This is the main content section."})
+        renderer = PmdRenderer(
+            context={"content": "This is the main content section."}, base_path=files_dir
+        )
         result = renderer.render(nodes)
 
         # Expected output (includes are rendered as placeholders)
         expected = (
             "\n"
-            "[INCLUDE: header.pmd]\n"
+            "This is the header content.\n"
+            "Generated by header.prompt file.\n"
+            "\n"
+            "\n"
             "# Main Content\n"
-            "This is the main content section.\n\n"
-            "[INCLUDE: footer.pmd]\n"
+            "This is the main content section.\n"
+            "\n"
+            "---\n"
+            "This is the footer content.\n"
+            "End of document.\n"
+            "\n"
+            "\n"
         )
 
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
@@ -376,7 +392,7 @@ class TestPmdIntegration:
         assert metadata["language"] == "mixed"
 
         # Render with happy=True
-        renderer = PMDRenderer(context={"name": "World", "happy": True})
+        renderer = PmdRenderer(context={"name": "World", "happy": True})
         result = renderer.render(nodes)
 
         # Expected output
@@ -405,7 +421,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with happy=False
-        renderer = PMDRenderer(context={"name": "世界", "happy": False})
+        renderer = PmdRenderer(context={"name": "世界", "happy": False})
         result = renderer.render(nodes)
 
         # Expected output
@@ -421,6 +437,65 @@ class TestPmdIntegration:
             "😐 Hope you're doing well!\n"
             "\n"
         )
+
+        assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
+
+    def test_conditional_includes_when_conditional_is_true(self, parser, files_dir):
+        """Test conditional.pmd with include directives in branches."""
+        template_file = files_dir / "conditional_include.pmd"
+        with open(template_file, encoding="utf-8") as f:
+            content = f.read()
+
+        # Parse
+        metadata, nodes = parser.parse(content)
+
+        # Render with authenticated context
+        renderer = PmdRenderer(
+            context={"include_extra": True, "name": "Batman"},
+            base_path=files_dir,
+        )
+        result = renderer.render(nodes)
+
+        # Expected output
+        expected = "\nTest Conditional Include\nHello Batman!\n"
+
+        assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
+
+    def test_conditional_includes_when_conditional_is_false(self, parser, files_dir):
+        """Test conditional.pmd with include directives in branches."""
+        template_file = files_dir / "conditional_include.pmd"
+        with open(template_file, encoding="utf-8") as f:
+            content = f.read()
+
+        # Parse
+        metadata, nodes = parser.parse(content)
+
+        # Render with authenticated context
+        renderer = PmdRenderer(
+            context={"extra_content": False, "name": "Batman"}, base_path=files_dir
+        )
+        result = renderer.render(nodes)
+
+        # Expected output
+        expected = "\nTest Conditional Include\n"
+
+        assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
+
+    def test_nested_includes_subdir(self, parser, files_dir):
+        """Test include.pmd with includes in a subdirectory."""
+        template_file = files_dir / "nested_includes.pmd"
+        with open(template_file, encoding="utf-8") as f:
+            content = f.read()
+
+        # Parse
+        metadata, nodes = parser.parse(content)
+
+        # Render
+        renderer = PmdRenderer(context={}, base_path=files_dir)
+        result = renderer.render(nodes)
+
+        # Expected output (includes are rendered as placeholders)
+        expected = "\nLevel 1\nLevel 2\n"
 
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 

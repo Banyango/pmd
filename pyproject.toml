@@ -91,6 +91,7 @@ exclude_lines = [
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
+exclude = ["examples"]
 
 [tool.ruff.lint]
 select = [
@@ -109,12 +110,15 @@ select = [
 ]
 ignore = [
     "E501",   # line too long (handled by formatter)
+    "SIM108", # ignore specific simplify rule SIM108
+    "PTH123", # ignore specific pathlib rule PTH123
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
     "ARG",    # unused function arguments in tests
     "S101",   # use of assert in tests
+    "RUF059", # ignore specific ruff rule RUF059
 ]
 
 [tool.ruff.lint.isort]

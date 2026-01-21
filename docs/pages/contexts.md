@@ -6,7 +6,7 @@ Example context
 
 ```json
 {
-  "name": "Charlie",
+  "name": "Batman",
   "user": { "id": 42, "active": true },
   "items": ["a", "b", "c"]
 }
@@ -23,7 +23,7 @@ Hello, {{name}}! (id={{user.id}}, active={{user.active}})
 Rendering with the example context produces:
 
 ```text
-Hello, Charlie! (id=42, active=True)
+Hello, Batman! (id=42, active=True)
 ```
 
 See also: `Metadata` page for template header metadata and usage.

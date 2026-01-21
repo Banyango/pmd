@@ -7,10 +7,10 @@ by applying variable substitution and control flow logic.
 from pathlib import Path
 from typing import Any
 
-from pmd.parser import PMDParser, ForNode, IfNode, IncludeNode, Node, TextNode, VariableNode
+from pmd.parser import ForNode, IfNode, IncludeNode, Node, PmdParser, TextNode, VariableNode
 
 
-class PMDRenderer:
+class PmdRenderer:
     def __init__(self, context: dict[str, Any] | None = None, base_path: Path | None = None):
         """Initialize the renderer with a context dictionary.
 
@@ -87,16 +87,14 @@ class PMDRenderer:
             try:
                 template_content = include_path.read_text()
 
-                parser = PMDParser()
+                parser = PmdParser()
                 _, included_nodes = parser.parse(template_content)
 
-                included_renderer = PMDRenderer(
-                    context=self.context,
-                    base_path=include_path.parent
-                )
+                included_renderer = PmdRenderer(context=self.context, base_path=self.base_path)
                 return included_renderer.render(included_nodes)
 
             except FileNotFoundError:
+                print(f"Included template not found: {include_path}")
                 return ""
             except Exception:
                 return ""

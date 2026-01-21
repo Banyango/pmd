@@ -1,0 +1,6 @@
+@task: conditional-include
+
+Test Conditional Include
+{% if include_extra %}
+{% include "extra_content.pmd" %}
+{% endif %}

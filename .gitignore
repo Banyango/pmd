@@ -1,6 +1,4 @@
 # Byte-compiled / optimized / DLL files
-uv.lock
-# uv
 
 Thumbs.db
 .DS_Store
@@ -139,6 +137,7 @@ downloads/
 dist/
 develop-eggs/
 build/
+output/
 .Python
 # Distribution / packaging
 

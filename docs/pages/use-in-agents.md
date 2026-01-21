@@ -18,13 +18,14 @@ Here's a practical example of using PMD in a multi-step agent workflow:
 
 ```python
 from pathlib import Path
-from pmd.parser import PMDParser
-from pmd.renderer import PMDRenderer
+from pmd.parser import PmdParser
+from pmd.renderer import PmdRenderer
+
 
 class ResearchAgent:
     def __init__(self, template_dir: Path):
         self.template_dir = template_dir
-        self.parser = PMDParser()
+        self.parser = PmdParser()
         self.conversation_history = []
 
     def render_prompt(self, template_name: str, context: dict) -> str:
@@ -33,7 +34,7 @@ class ResearchAgent:
         template_content = template_path.read_text()
 
         _, nodes = self.parser.parse(template_content)
-        renderer = PMDRenderer(
+        renderer = PmdRenderer(
             context=context,
             base_path=self.template_dir
         )
@@ -179,13 +180,13 @@ context = {
 }
 
 # Parse template once
-parser = PMDParser()
+parser = PmdParser()
 _, nodes = parser.parse(template_content)
 
 # Agent loop with evolving context
 for i in range(5):
     # Create renderer with current context
-    renderer = PMDRenderer(context=context, base_path=Path("."))
+    renderer = PmdRenderer(context=context, base_path=Path("."))
     prompt = renderer.render(nodes)
 
     # Get LLM response
