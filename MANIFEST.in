@@ -1,5 +1,5 @@
 include README.md
 include LICENSE
 include CHANGELOG.md
-recursive-include src/pmd *.pyi
+recursive-include src/margarita *.pyi
 

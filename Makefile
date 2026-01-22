@@ -13,7 +13,7 @@ test:  ## Run tests with pytest
 	uv run pytest
 
 test-cov:  ## Run tests with coverage
-	uv run pytest --cov=pmd --cov-report=html --cov-report=term
+	uv run pytest --cov=margarita --cov-report=html --cov-report=term
 
 lint:  ## Run linting with ruff
 	uv run ruff check . --fix
@@ -25,7 +25,7 @@ format-check:  ## Check code formatting without making changes
 	uv run ruff format --check .
 
 type-check:  ## Run type checking with mypy
-	uv run mypy src/pmd
+	uv run mypy src/margarita
 
 check: format-check lint type-check test  ## Run all checks (format, lint, type-check, test)
 

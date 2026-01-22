@@ -1,11 +1,11 @@
-# PMD
+# MARGARITA
 
-[![PyPI version](https://badge.fury.io/py/pmd.svg)](https://badge.fury.io/py/pmd)
-[![Python Support](https://img.shields.io/pypi/pyversions/pmd.svg)](https://pypi.org/project/pmd/)
+[![PyPI version](https://badge.fury.io/py/margarita.svg)](https://badge.fury.io/py/margarita)
+[![Python Support](https://img.shields.io/pypi/pyversions/margarita.svg)](https://pypi.org/project/margarita/)
 
-Pmd is a lightweight markup language and Python library for writing, composing, and rendering structured LLM prompts.
+Margarita is a lightweight markup language and Python library for writing, composing, and rendering structured LLM prompts.
 
-Pmd targets prompt engineering workflows where clarity, versioning, and correctness matter.
+Margarita targets prompt engineering workflows where clarity, versioning, and correctness matter.
 
 ## Features
 
@@ -16,13 +16,13 @@ Pmd targets prompt engineering workflows where clarity, versioning, and correctn
 
 ## Get Started
 
-Here's a Hello World example. helloworld.pmd contains the template, and helloworld.json contains the data.
+Here's a Hello World example. helloworld.marg contains the template, and helloworld.json contains the data.
 
-```markdown:helloworld.pmd
-// file:helloworld.pmd
+```markdown:helloworld.marg
+// file:helloworld.marg
 
 Hello, {{name}}!
-Welcome to Pmd templating.
+Welcome to Margarita templating.
 ```
 
 ```json:helloworld.json
@@ -35,14 +35,14 @@ Welcome to Pmd templating.
 
 **Run the following command:**
 ```shell
-pmd render helloworld.pmd
+margarita render helloworld.marg
 ```
 
 **Output:**
 
 ```markdown
 Hello, World!
-Welcome to Pmd templating.
+Welcome to Margarita templating.
 ```
 
 
@@ -52,7 +52,7 @@ TBD
 
 ## Documentation
 
-Full documentation is available at [https://banyango.github.io/pmd/latest](https://www.banyango.com/PMD/latest/)
+Full documentation is available at [https://banyango.github.io/margarita/latest](https://www.banyango.com/MARGARITA/latest/)
 
 ## Development
 
@@ -71,7 +71,7 @@ uv sync # Install dependencies
 uv run pytest
 
 # Run tests with coverage
-uv run pytest --cov=pmd --cov-report=html
+uv run pytest --cov=margarita --cov-report=html
 ```
 
 ### Code Quality
@@ -84,7 +84,7 @@ uv run ruff format .
 uv run ruff check .
 
 # Type checking with mypy
-uv run mypy src/pmd
+uv run mypy src/margarita
 ```
 
 ### Building the Package
@@ -127,5 +127,5 @@ See [CHANGELOG.md](CHANGELOG.md) for a history of changes to this project.
 
 ## Support
 
-If you encounter any problems or have questions, please [open an issue](https://github.com/yourusername/pmd/issues).
+If you encounter any problems or have questions, please [open an issue](https://github.com/yourusername/margarita/issues).
 

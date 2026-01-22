@@ -16,7 +16,7 @@ Rendered result
 
 Given the following template:
 
-```pmd
+```margarita
 Hello, {{name}}! (id={{user.id}}, active={{user.active}})
 ```
 
@@ -31,7 +31,7 @@ See also: `Metadata` page for template header metadata and usage.
 Behavior and precedence
 
 - CLI `-c` (inline JSON) and `-f` (context file) override auto-detected context files.
-- When rendering a single template, PMD looks for a sibling `.json` file with the same base name.
-- Metadata is parsed from the template and can be shown with `pmd render --show-metadata` or `pmd metadata`.
+- When rendering a single template, MARGARITA looks for a sibling `.json` file with the same base name.
+- Metadata is parsed from the template and can be shown with `margarita render --show-metadata` or `margarita metadata`.
 
 Tip: Keep contexts explicit and small; prefer using a context file in CI to ensure reproducible renders.

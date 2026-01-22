@@ -1,8 +1,8 @@
-# Using PMD in Agentic Loops
+# Using MARGARITA in Agentic Loops
 
-PMD's dynamic rendering capabilities make it ideal for use in agentic AI workflows where prompts need to be generated, modified, and refined through multiple iterations.
+MARGARITA's dynamic rendering capabilities make it ideal for use in agentic AI workflows where prompts need to be generated, modified, and refined through multiple iterations.
 
-## Why PMD for Agents?
+## Why MARGARITA for Agents?
 
 Agentic systems often need to:
 
@@ -14,18 +14,18 @@ Agentic systems often need to:
 
 ## Agentic Loop Example
 
-Here's a practical example of using PMD in a multi-step agent workflow:
+Here's a practical example of using MARGARITA in a multi-step agent workflow:
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
 class ResearchAgent:
     def __init__(self, template_dir: Path):
         self.template_dir = template_dir
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
         self.conversation_history = []
 
     def render_prompt(self, template_name: str, context: dict) -> str:
@@ -34,7 +34,7 @@ class ResearchAgent:
         template_content = template_path.read_text()
 
         _, nodes = self.parser.parse(template_content)
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context=context,
             base_path=self.template_dir
         )
@@ -46,7 +46,7 @@ class ResearchAgent:
 
         for iteration in range(max_iterations):
             # Render the research prompt
-            prompt = self.render_prompt("research.pmd", {
+            prompt = self.render_prompt("research.marg", {
                 "topic": topic,
                 "iteration": iteration + 1,
                 "previous_findings": findings,
@@ -74,7 +74,7 @@ class ResearchAgent:
                 break
 
         # Generate final summary
-        summary_prompt = self.render_prompt("summary.pmd", {
+        summary_prompt = self.render_prompt("summary.marg", {
             "topic": topic,
             "findings": findings,
             "total_iterations": len(findings)
@@ -95,9 +95,9 @@ class ResearchAgent:
 
 ## Template Examples
 
-### research.pmd
+### research.marg
 
-```pmd
+```margarita
 ---
 name: research-prompt
 version: 1.0.0
@@ -133,9 +133,9 @@ Continue researching this topic. Build upon previous findings and provide new in
 When your research is complete, include the word COMPLETE in your response.
 ```
 
-### summary.pmd
+### summary.marg
 
-```pmd
+```margarita
 ---
 name: summary-prompt
 version: 1.0.0
@@ -169,7 +169,7 @@ Highlight key insights and actionable takeaways.
 
 ## Dynamic Context Updates
 
-PMD's renderer allows you to update context dynamically within your agent loop:
+MARGARITA's renderer allows you to update context dynamically within your agent loop:
 
 ```python
 # Initial context
@@ -180,13 +180,13 @@ context = {
 }
 
 # Parse template once
-parser = PmdParser()
+parser = MargaritaParser()
 _, nodes = parser.parse(template_content)
 
 # Agent loop with evolving context
 for i in range(5):
     # Create renderer with current context
-    renderer = PmdRenderer(context=context, base_path=Path("."))
+    renderer = MargaritaRenderer(context=context, base_path=Path("."))
     prompt = renderer.render(nodes)
 
     # Get LLM response

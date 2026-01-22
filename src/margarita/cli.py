@@ -1,4 +1,4 @@
-"""Command-line interface for pmd template rendering."""
+"""Command-line interface for margarita template rendering."""
 
 import json
 import sys
@@ -7,16 +7,16 @@ from typing import Optional
 
 import click
 
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
 @click.group()
-@click.version_option(version="0.1.0", prog_name="pmd")
+@click.version_option(version="0.1.0", prog_name="margarita")
 def main():
-    """Pmd template rendering tool.
+    """Margarita template rendering tool.
 
-    Render pmd template files with variable substitution.
+    Render margarita template files with variable substitution.
     """
     pass
 
@@ -44,26 +44,26 @@ def render(
     context_file: Optional[Path],
     show_metadata: bool,
 ):
-    """Render a pmd template file or directory to markdown.
+    """Render a margarita template file or directory to markdown.
 
-    TEMPLATE_PATH is the path to a .pmd template file or a directory containing .pmd files.
+    TEMPLATE_PATH is the path to a .marg template file or a directory containing .marg files.
 
     Examples:
 
         # Render with variables from JSON string
-        pmd render template.pmd -c '{"name": "World"}'
+        margarita render template.marg -c '{"name": "World"}'
 
         # Render with variables from JSON file
-        pmd render template.pmd -f context.json
+        margarita render template.marg -f context.json
 
         # Save output to file
-        pmd render template.pmd -o output.md -c '{"name": "World"}'
+        margarita render template.marg -o output.md -c '{"name": "World"}'
 
         # Render all templates in a directory
-        pmd render templates/ -o output/
+        margarita render templates/ -o output/
 
         # Show metadata
-        pmd render template.pmd --show-metadata
+        margarita render template.marg --show-metadata
     """
     # Parse context
     context_dict = {}
@@ -122,7 +122,7 @@ def _render_single_file(
 
     # Parse the template
     try:
-        parser = PmdParser()
+        parser = MargaritaParser()
         metadata, nodes = parser.parse(template_content)
     except Exception as e:
         click.echo(f"Error parsing template: {e}", err=True)
@@ -137,7 +137,7 @@ def _render_single_file(
 
     # Render the template
     try:
-        renderer = PmdRenderer(context=context_dict, base_path=template_file.parent)
+        renderer = MargaritaRenderer(context=context_dict, base_path=template_file.parent)
         result = renderer.render(nodes)
     except Exception as e:
         click.echo(f"Error rendering template: {e}", err=True)
@@ -158,10 +158,10 @@ def _render_single_file(
 def _render_directory(
     template_dir: Path, output_dir: Path | None, context_dict: dict, show_metadata: bool
 ):
-    pmd_files = list(template_dir.glob("*.pmd"))
+    margarita_files = list(template_dir.glob("*.marg"))
 
-    if not pmd_files:
-        click.echo(f"No .pmd files found in directory: {template_dir}", err=True)
+    if not margarita_files:
+        click.echo(f"No .marg files found in directory: {template_dir}", err=True)
         sys.exit(1)
 
     if output_dir:
@@ -171,7 +171,7 @@ def _render_directory(
             click.echo(f"Error creating output directory: {e}", err=True)
             sys.exit(1)
 
-    for template_file in pmd_files:
+    for template_file in margarita_files:
         if show_metadata:
             click.echo(f"\n=== Processing: {template_file.name} ===", err=True)
 
@@ -202,21 +202,21 @@ def _render_directory(
 
         _render_single_file(template_file, output_file, file_context, show_metadata)
 
-        if not output_file and len(pmd_files) > 1:
+        if not output_file and len(margarita_files) > 1:
             click.echo(f"\n--- End of {template_file.name} ---\n")
 
 
 @main.command()
 @click.argument("template_path", type=click.Path(exists=True, path_type=Path))
 def metadata(template_path: Path):
-    """Show metadata from a pmd template file or directory.
+    """Show metadata from a margarita template file or directory.
 
-    TEMPLATE_PATH is the path to a .pmd template file or a directory containing .pmd files.
+    TEMPLATE_PATH is the path to a .marg template file or a directory containing .marg files.
 
     Examples:
 
-        pmd metadata template.pmd
-        pmd metadata templates/
+        margarita metadata template.marg
+        margarita metadata templates/
     """
     # Determine if we're processing a file or directory
     if template_path.is_file():
@@ -239,7 +239,7 @@ def _show_metadata_single_file(template_file: Path):
 
     # Parse the template
     try:
-        parser = PmdParser()
+        parser = MargaritaParser()
         metadata_dict, _ = parser.parse(template_content)
     except Exception as e:
         click.echo(f"Error parsing template: {e}", err=True)
@@ -254,16 +254,16 @@ def _show_metadata_single_file(template_file: Path):
 
 
 def _show_metadata_directory(template_dir: Path):
-    """Show metadata from all .pmd files in a directory."""
-    # Find all .pmd files
-    pmd_files = list(template_dir.glob("*.pmd"))
+    """Show metadata from all .marg files in a directory."""
+    # Find all .marg files
+    margarita_files = list(template_dir.glob("*.marg"))
 
-    if not pmd_files:
-        click.echo(f"No .pmd files found in directory: {template_dir}", err=True)
+    if not margarita_files:
+        click.echo(f"No .marg files found in directory: {template_dir}", err=True)
         sys.exit(1)
 
     # Process each file
-    for i, template_file in enumerate(pmd_files):
+    for i, template_file in enumerate(margarita_files):
         if i > 0:
             click.echo()  # Blank line between files
 
@@ -271,7 +271,7 @@ def _show_metadata_directory(template_dir: Path):
 
         try:
             template_content = template_file.read_text()
-            parser = PmdParser()
+            parser = MargaritaParser()
             metadata_dict, _ = parser.parse(template_content)
 
             if metadata_dict:

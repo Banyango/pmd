@@ -1,16 +1,16 @@
-from pmd.parser import (
+from margarita.parser import (
     ForNode,
     IfNode,
     IncludeNode,
-    PmdParser,
+    MargaritaParser,
     TextNode,
     VariableNode,
 )
 
 
-class TestPmdParser:
+class TestMargaritaParser:
     def setup_method(self):
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
 
     def test_parse_should_parse_text_when_template_is_plain_text(self):
         template = "Hello, world!"
@@ -154,12 +154,12 @@ Items:
         assert for_node.iterator == "item"
 
     def test_parse_should_parse_include_when_template_has_include_directive(self):
-        template = '{% include "header.pmd" %}'
+        template = '{% include "header.marg" %}'
         _, nodes = self.parser.parse(template)
 
         assert len(nodes) == 1
         assert isinstance(nodes[0], IncludeNode)
-        assert nodes[0].template_name == "header.pmd"
+        assert nodes[0].template_name == "header.marg"
 
     def test_parse_should_ignore_comments_when_template_has_comments(self):
         template = """Text before
@@ -297,15 +297,15 @@ Content"""
         assert metadata["email"] == "user@example.com"
 
     def test_parse_should_parse_all_includes_when_template_has_multiple_includes(self):
-        template = """{% include "header.pmd" %}
+        template = """{% include "header.marg" %}
 Content here
-{% include "footer.pmd" %}"""
+{% include "footer.marg" %}"""
         _, nodes = self.parser.parse(template)
 
         include_nodes = [node for node in nodes if isinstance(node, IncludeNode)]
         assert len(include_nodes) == 2
-        assert include_nodes[0].template_name == "header.pmd"
-        assert include_nodes[1].template_name == "footer.pmd"
+        assert include_nodes[0].template_name == "header.marg"
+        assert include_nodes[1].template_name == "footer.marg"
 
     def test_parse_should_reset_state_when_parsing_multiple_templates(self):
         template1 = "@key: value1\nText1"
@@ -337,9 +337,9 @@ Content here
         assert nodes[0].iterable == "my_list"
 
 
-class TestPmdParserEdgeCases:
+class TestMargaritaParserEdgeCases:
     def setup_method(self):
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
 
     def test_parse_should_parse_if_when_if_statement_is_unclosed(self):
         template = "{% if condition %}Text"

@@ -1,19 +1,19 @@
 # Include Files
 
-Reuse template fragments using `{% include "file.pmd" %}`. Includes are resolved relative to the including template's directory.
+Reuse template fragments using `{% include "file.marg" %}`. Includes are resolved relative to the including template's directory.
 
 Example
 
-`header.pmd`:
+`header.marg`:
 
-```pmd
+```margarita
 This is the header content.
 ```
 
-`page.pmd`:
+`page.marg`:
 
-```pmd
-{% include "header.pmd" %}
+```margarita
+{% include "header.marg" %}
 
 # Page Title
 
@@ -22,7 +22,7 @@ Content goes here using the same context.
 
 Rendered result
 
-When rendering `page.pmd`, the output will include the header content followed by the page body:
+When rendering `page.marg`, the output will include the header content followed by the page body:
 
 ```text
 This is the header content.
@@ -40,32 +40,32 @@ Behavior
 
 ## Using Includes in Python API
 
-When using PMD programmatically, you must set the `base_path` when creating the renderer. **All include paths are resolved relative to this base path**, not relative to the file doing the including.
+When using MARGARITA programmatically, you must set the `base_path` when creating the renderer. **All include paths are resolved relative to this base path**, not relative to the file doing the including.
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 # Parse your template
-parser = PmdParser()
-template = '{% include "header.pmd" %}\n\nMain content here.'
+parser = MargaritaParser()
+template = '{% include "header.marg" %}\n\nMain content here.'
 _, nodes = parser.parse(template)
 
 # Set base_path - all includes resolve from here
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={"title": "My Page"},
-    base_path=Path("./templates")  # header.pmd will be loaded from ./templates/header.pmd
+    base_path=Path("./templates")  # header.marg will be loaded from ./templates/header.marg
 )
 
 output = renderer.render(nodes)
 ```
 
-**Important**: Even in nested includes, all paths are from `base_path`. If `snippets/section.pmd` includes another file, it must use the full path from `base_path`:
+**Important**: Even in nested includes, all paths are from `base_path`. If `snippets/section.marg` includes another file, it must use the full path from `base_path`:
 
-```pmd
-{# Inside templates/snippets/section.pmd #}
-{% include "snippets/subsection.pmd" %}  {# NOT just "subsection.pmd" #}
+```margarita
+{# Inside templates/snippets/section.marg #}
+{% include "snippets/subsection.marg" %}  {# NOT just "subsection.marg" #}
 ```
 
 See the [Using Includes](includes.md) page for comprehensive examples and patterns.

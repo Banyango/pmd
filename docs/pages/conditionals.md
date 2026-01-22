@@ -4,7 +4,7 @@ Use conditionals to render sections conditionally based on context values.
 
 Syntax
 
-```pmd
+```margarita
 {% if subscribed %}
 Thanks for subscribing, {{name}}!
 {% else %}
@@ -32,4 +32,4 @@ Notes
 - You can reference nested values with dotted paths, e.g. `user.active`.
 - There is no support for complex expressions — stick to presence and simple boolean checks.
 
-Tip: Use `pmd metadata` or a dry render to ensure required context keys are present before running in production.
+Tip: Use `margarita metadata` or a dry render to ensure required context keys are present before running in production.

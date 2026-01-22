@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
-class PmdComposer:
+class MargaritaComposer:
     def __init__(self, template_dir: Path):
         self.template_dir = template_dir
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
         self._template_cache: dict[str, tuple] = {}
 
     def load_template(self, template_path: str) -> tuple:
@@ -41,7 +41,7 @@ class PmdComposer:
         """
         _, nodes = self.load_template(template_path)
 
-        renderer = PmdRenderer(context=context, base_path=self.template_dir)
+        renderer = MargaritaRenderer(context=context, base_path=self.template_dir)
 
         return renderer.render(nodes)
 

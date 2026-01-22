@@ -1,6 +1,6 @@
-# Contributing to pmd
+# Contributing to margarita
 
-First off, thank you for considering contributing to pmd! It's people like you that make pmd such a great tool.
+First off, thank you for considering contributing to margarita! It's people like you that make margarita such a great tool.
 
 ## Code of Conduct
 
@@ -55,7 +55,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
    ```bash
    uv run ruff format .
    uv run ruff check .
-   uv run mypy src/pmd
+   uv run mypy src/margarita
    ```
 6. Commit your changes with a descriptive commit message
 7. Push to your fork and submit a pull request

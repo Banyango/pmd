@@ -1,35 +1,35 @@
 # Using Includes in Python API
 
-PMD's include functionality allows you to compose templates from reusable snippets, making it easy to build modular, maintainable prompt libraries. This page covers how to use includes programmatically through the Python API.
+MARGARITA's include functionality allows you to compose templates from reusable snippets, making it easy to build modular, maintainable prompt libraries. This page covers how to use includes programmatically through the Python API.
 
 ## Basic Include Usage
 
 ### Setting Up the Renderer
 
-The key to using includes is setting the `base_path` parameter when creating a `PmdRenderer`. This tells PMD where to resolve relative include paths:
+The key to using includes is setting the `base_path` parameter when creating a `MargaritaRenderer`. This tells MARGARITA where to resolve relative include paths:
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 # Define base path for includes
 template_dir = Path("./templates")
 
 # Parse your main template
-parser = PmdParser()
+parser = MargaritaParser()
 template_content = """
-{% include "header.pmd" %}
+{% include "header.marg" %}
 
 Main content here.
 
-{% include "footer.pmd" %}
+{% include "footer.marg" %}
 """
 
 metadata, nodes = parser.parse(template_content)
 
 # Create renderer with base_path
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={"app_name": "MyApp"},
     base_path=template_dir
 )
@@ -44,13 +44,13 @@ output = renderer.render(nodes)
 
 Create a library of reusable prompt components:
 
-**templates/snippets/system_role.pmd**:
-```pmd
+**templates/snippets/system_role.marg**:
+```margarita
 You are {{role}}, a helpful AI assistant.
 ```
 
-**templates/snippets/task_context.pmd**:
-```pmd
+**templates/snippets/task_context.marg**:
+```margarita
 ## Task Context
 
 User: {{user_name}}
@@ -58,8 +58,8 @@ Session: {{session_id}}
 Timestamp: {{timestamp}}
 ```
 
-**templates/snippets/output_format.pmd**:
-```pmd
+**templates/snippets/output_format.marg**:
+```margarita
 ## Output Requirements
 
 - Provide responses in {{format}} format
@@ -71,27 +71,27 @@ Timestamp: {{timestamp}}
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 # Main template that composes snippets
 main_template = """
-{% include "snippets/system_role.pmd" %}
+{% include "snippets/system_role.marg" %}
 
-{% include "snippets/task_context.pmd" %}
+{% include "snippets/task_context.marg" %}
 
 ## User Request
 
 {{user_request}}
 
-{% include "snippets/output_format.pmd" %}
+{% include "snippets/output_format.marg" %}
 """
 
 # Parse and render
-parser = PmdParser()
+parser = MargaritaParser()
 _, nodes = parser.parse(main_template)
 
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={
         "role": "technical expert",
         "user_name": "Alice",
@@ -111,24 +111,24 @@ print(prompt)
 
 ## Dynamic Include Loading
 
-### PmdComposer
+### MargaritaComposer
 
-Include complex prompts dynamically using `PmdComposer`:
+Include complex prompts dynamically using `MargaritaComposer`:
 
 ```python
 from pathlib import Path
-from pmd.composer import PmdComposer
+from margarita.composer import MargaritaComposer
 
 # Usage
-manager = PmdComposer(Path("./templates"))
+manager = MargaritaComposer(Path("./templates"))
 
 # Compose a complex prompt from multiple snippets
 prompt = manager.compose_prompt(
     snippets=[
-        "snippets/system_role.pmd",
-        "snippets/task_context.pmd",
-        "snippets/chain_of_thought.pmd",
-        "snippets/output_format.pmd"
+        "snippets/system_role.marg",
+        "snippets/task_context.marg",
+        "snippets/chain_of_thought.marg",
+        "snippets/output_format.marg"
     ],
     context={
         "role": "data scientist",
@@ -147,10 +147,10 @@ prompt = manager.compose_prompt(
 ```python
 # Template with conditional includes
 template = """
-{% include "snippets/system_role.pmd" %}
+{% include "snippets/system_role.marg" %}
 
 {% if use_examples %}
-{% include "snippets/few_shot_examples.pmd" %}
+{% include "snippets/few_shot_examples.marg" %}
 {% endif %}
 
 ## Task
@@ -158,17 +158,17 @@ template = """
 {{task}}
 
 {% if detailed_output %}
-{% include "snippets/detailed_format.pmd" %}
+{% include "snippets/detailed_format.marg" %}
 {% else %}
-{% include "snippets/brief_format.pmd" %}
+{% include "snippets/brief_format.marg" %}
 {% endif %}
 """
 
-parser = PmdParser()
+parser = MargaritaParser()
 _, nodes = parser.parse(template)
 
 # Render with detailed mode
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={
         "role": "assistant",
         "use_examples": True,
@@ -191,55 +191,55 @@ Given this directory structure:
 
 ```
 templates/
-  main.pmd
+  main.marg
   snippets/
-    complete_prompt.pmd
-    header_section.pmd
-    system_role.pmd
-    safety_guidelines.pmd
-    body_section.pmd
-    footer_section.pmd
+    complete_prompt.marg
+    header_section.marg
+    system_role.marg
+    safety_guidelines.marg
+    body_section.marg
+    footer_section.marg
 ```
 
-**templates/snippets/complete_prompt.pmd**:
-```pmd
-{% include "snippets/header_section.pmd" %}
+**templates/snippets/complete_prompt.marg**:
+```margarita
+{% include "snippets/header_section.marg" %}
 
-{% include "snippets/body_section.pmd" %}
+{% include "snippets/body_section.marg" %}
 
-{% include "snippets/footer_section.pmd" %}
+{% include "snippets/footer_section.marg" %}
 ```
 
-**templates/snippets/header_section.pmd**:
-```pmd
-{% include "snippets/system_role.pmd" %}
+**templates/snippets/header_section.marg**:
+```margarita
+{% include "snippets/system_role.marg" %}
 
-{% include "snippets/safety_guidelines.pmd" %}
+{% include "snippets/safety_guidelines.marg" %}
 ```
 
-Notice that even though `header_section.pmd` is in the `snippets/` directory, it **still uses `"snippets/system_role.pmd"`** in its include statement, not just `"system_role.pmd"`. This is because all paths are resolved from `base_path`.
+Notice that even though `header_section.marg` is in the `snippets/` directory, it **still uses `"snippets/system_role.marg"`** in its include statement, not just `"system_role.marg"`. This is because all paths are resolved from `base_path`.
 
 ### Example: Nested Include Rendering
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 # Parse the main template
-parser = PmdParser()
-_, nodes = parser.parse('{% include "snippets/complete_prompt.pmd" %}')
+parser = MargaritaParser()
+_, nodes = parser.parse('{% include "snippets/complete_prompt.marg" %}')
 
 # Set base_path to templates/
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={"role": "assistant"},
     base_path=Path("./templates")
 )
 
 # All includes are resolved from ./templates/
-# - snippets/complete_prompt.pmd -> ./templates/snippets/complete_prompt.pmd
-# - snippets/header_section.pmd -> ./templates/snippets/header_section.pmd
-# - snippets/system_role.pmd -> ./templates/snippets/system_role.pmd
+# - snippets/complete_prompt.marg -> ./templates/snippets/complete_prompt.marg
+# - snippets/header_section.marg -> ./templates/snippets/header_section.marg
+# - snippets/system_role.marg -> ./templates/snippets/system_role.marg
 output = renderer.render(nodes)
 ```
 
@@ -247,35 +247,35 @@ output = renderer.render(nodes)
 
 You can nest includes as deeply as needed:
 
-**templates/layouts/full_prompt.pmd**:
-```pmd
-{% include "sections/preamble.pmd" %}
+**templates/layouts/full_prompt.marg**:
+```margarita
+{% include "sections/preamble.marg" %}
 
-{% include "sections/main_content.pmd" %}
+{% include "sections/main_content.marg" %}
 
-{% include "sections/conclusion.pmd" %}
+{% include "sections/conclusion.marg" %}
 ```
 
-**templates/sections/preamble.pmd**:
-```pmd
-{% include "components/header.pmd" %}
+**templates/sections/preamble.marg**:
+```margarita
+{% include "components/header.marg" %}
 
-{% include "components/instructions.pmd" %}
+{% include "components/instructions.marg" %}
 ```
 
-**templates/components/header.pmd**:
-```pmd
-{% include "atoms/logo.pmd" %}
+**templates/components/header.marg**:
+```margarita
+{% include "atoms/logo.marg" %}
 
-{% include "atoms/title.pmd" %}
+{% include "atoms/title.marg" %}
 ```
 
 ```python
 # All paths resolve from base_path, no matter how deep the nesting
-parser = PmdParser()
-_, nodes = parser.parse('{% include "layouts/full_prompt.pmd" %}')
+parser = MargaritaParser()
+_, nodes = parser.parse('{% include "layouts/full_prompt.marg" %}')
 
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={"title": "My Prompt"},
     base_path=Path("./templates")
 )
@@ -289,12 +289,12 @@ This design makes your templates portable and predictable:
 
 ```python
 # ✅ CORRECT: All paths from base_path
-# templates/snippets/section.pmd contains:
-{% include "snippets/subsection.pmd" %}
+# templates/snippets/section.marg contains:
+{% include "snippets/subsection.marg" %}
 
 # ❌ WRONG: Don't use relative paths from the current file
-# templates/snippets/section.pmd should NOT contain:
-{% include "subsection.pmd" %}  # This won't work!
+# templates/snippets/section.marg should NOT contain:
+{% include "subsection.marg" %}  # This won't work!
 ```
 
 ### Practical Tip: Organizing Nested Structures
@@ -305,16 +305,16 @@ Use consistent path prefixes to make nested includes clear:
 templates/
   prompts/
     agent/
-      researcher.pmd    -> includes "components/agent/..."
-      analyzer.pmd      -> includes "components/agent/..."
+      researcher.marg    -> includes "components/agent/..."
+      analyzer.marg      -> includes "components/agent/..."
   components/
     agent/
-      role.pmd          -> includes "atoms/agent/..."
-      tools.pmd         -> includes "atoms/agent/..."
+      role.marg          -> includes "atoms/agent/..."
+      tools.marg         -> includes "atoms/agent/..."
   atoms/
     agent/
-      identity.pmd
-      capabilities.pmd
+      identity.marg
+      capabilities.marg
 ```
 
 This structure makes it obvious that all includes use the full path from `templates/`.
@@ -325,17 +325,17 @@ Always handle include errors gracefully:
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
 def safe_render(template_content: str, context: dict, base_path: Path) -> str:
     """Safely render a template with error handling."""
     try:
-        parser = PmdParser()
+        parser = MargaritaParser()
         _, nodes = parser.parse(template_content)
 
-        renderer = PmdRenderer(context=context, base_path=base_path)
+        renderer = MargaritaRenderer(context=context, base_path=base_path)
         return renderer.render(nodes)
 
     except FileNotFoundError as e:
@@ -351,7 +351,7 @@ def safe_render(template_content: str, context: dict, base_path: Path) -> str:
 
 # Usage
 result = safe_render(
-    '{% include "optional_snippet.pmd" %}\nMain content.',
+    '{% include "optional_snippet.marg" %}\nMain content.',
     context={},
     base_path=Path("./templates")
 )
@@ -365,44 +365,44 @@ result = safe_render(
 templates/
   snippets/
     system/
-      role_definitions.pmd
-      safety_guidelines.pmd
+      role_definitions.marg
+      safety_guidelines.marg
     formatting/
-      json_output.pmd
-      markdown_output.pmd
+      json_output.marg
+      markdown_output.marg
     examples/
-      few_shot_classification.pmd
-      few_shot_extraction.pmd
+      few_shot_classification.marg
+      few_shot_extraction.marg
     sections/
-      header.pmd
-      footer.pmd
+      header.marg
+      footer.marg
 ```
 
 ### 2. Use Descriptive Naming
 
 ```python
 # Good: Clear, descriptive names
-{% include "snippets/system/expert_role.pmd" %}
-{% include "snippets/formatting/structured_json_output.pmd" %}
+{% include "snippets/system/expert_role.marg" %}
+{% include "snippets/formatting/structured_json_output.marg" %}
 
 # Avoid: Vague names
-{% include "snippets/s1.pmd" %}
-{% include "snippets/format.pmd" %}
+{% include "snippets/s1.marg" %}
+{% include "snippets/format.marg" %}
 ```
 
 ### 3. Keep Snippets Focused
 
 Each snippet should have a single, clear purpose:
 
-```pmd
+```margarita
 # Good: Focused snippet
-# file: role_definition.pmd
+# file: role_definition.marg
 You are a {{role}} with expertise in {{domain}}.
 ```
 
-```pmd
+```margarita
 # Avoid: Mixing multiple concerns
-# file: everything.pmd
+# file: everything.marg
 You are a {{role}}.
 Task: {{task}}
 Output format: {{format}}
@@ -412,7 +412,7 @@ Output format: {{format}}
 
 Add metadata to snippets documenting required context variables:
 
-```pmd
+```margarita
 ---
 name: role-definition
 version: 1.0.0
@@ -433,7 +433,7 @@ Parse templates once, render many times:
 class OptimizedRenderer:
     def __init__(self, template_dir: Path):
         self.template_dir = template_dir
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
         self.parsed_cache = {}
 
     def get_nodes(self, template_content: str):
@@ -447,7 +447,7 @@ class OptimizedRenderer:
 
     def render(self, template_content: str, context: dict) -> str:
         nodes = self.get_nodes(template_content)
-        renderer = PmdRenderer(context=context, base_path=self.template_dir)
+        renderer = MargaritaRenderer(context=context, base_path=self.template_dir)
         return renderer.render(nodes)
 ```
 
@@ -455,8 +455,8 @@ class OptimizedRenderer:
 
 ```python
 from pathlib import Path
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
 class AgentPromptBuilder:
@@ -464,7 +464,7 @@ class AgentPromptBuilder:
 
     def __init__(self, snippets_dir: Path):
         self.snippets_dir = snippets_dir
-        self.parser = PmdParser()
+        self.parser = MargaritaParser()
 
     def build_agent_prompt(
             self,
@@ -477,19 +477,19 @@ class AgentPromptBuilder:
         # Map agent types to snippet combinations
         snippet_map = {
             "researcher": [
-                "roles/researcher.pmd",
-                "capabilities/web_search.pmd",
-                "output/structured_findings.pmd"
+                "roles/researcher.marg",
+                "capabilities/web_search.marg",
+                "output/structured_findings.marg"
             ],
             "analyzer": [
-                "roles/analyzer.pmd",
-                "capabilities/data_analysis.pmd",
-                "output/insights_report.pmd"
+                "roles/analyzer.marg",
+                "capabilities/data_analysis.marg",
+                "output/insights_report.marg"
             ],
             "writer": [
-                "roles/writer.pmd",
-                "capabilities/content_creation.pmd",
-                "output/polished_text.pmd"
+                "roles/writer.marg",
+                "capabilities/content_creation.marg",
+                "output/polished_text.marg"
             ]
         }
 
@@ -505,7 +505,7 @@ class AgentPromptBuilder:
 
         # Render
         _, nodes = self.parser.parse(template)
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context=context,
             base_path=self.snippets_dir
         )

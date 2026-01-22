@@ -1,6 +1,6 @@
-"""Integration tests that run .pmd files through the parser and renderer.
+"""Integration tests that run .marg files through the parser and renderer.
 
-This module tests the complete pipeline: parsing .pmd template files,
+This module tests the complete pipeline: parsing .marg template files,
 render them with test data, and verifying the output matches expected results.
 """
 
@@ -8,17 +8,17 @@ import pathlib
 
 import pytest
 
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 
-class TestPmdIntegration:
-    """Integration tests for parsing and render .pmd templates."""
+class TestMargaritaIntegration:
+    """Integration tests for parsing and render .marg templates."""
 
     @pytest.fixture
     def parser(self):
         """Create a fresh parser instance."""
-        return PmdParser()
+        return MargaritaParser()
 
     @pytest.fixture
     def files_dir(self):
@@ -26,8 +26,8 @@ class TestPmdIntegration:
         return pathlib.Path(__file__).parent / "files"
 
     def test_simple_template(self, parser, files_dir):
-        """Test simple.pmd with basic variable substitution."""
-        template_file = files_dir / "simple.pmd"
+        """Test simple.marg with basic variable substitution."""
+        template_file = files_dir / "simple.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -35,17 +35,17 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with context
-        renderer = PmdRenderer(context={"name": "Alice"})
+        renderer = MargaritaRenderer(context={"name": "Alice"})
         result = renderer.render(nodes)
 
         # Expected output
-        expected = "Hello, Alice!\nWelcome to Pmd templating.\n\n"
+        expected = "Hello, Alice!\nWelcome to Margarita templating.\n\n"
 
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_metadata_template(self, parser, files_dir):
-        """Test metadata.pmd with metadata and variable substitution."""
-        template_file = files_dir / "metadata.pmd"
+        """Test metadata.marg with metadata and variable substitution."""
+        template_file = files_dir / "metadata.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -58,7 +58,9 @@ class TestPmdIntegration:
         assert metadata["version"] == "2.0"
 
         # Render with context
-        renderer = PmdRenderer(context={"document": "This is a sample document to summarize."})
+        renderer = MargaritaRenderer(
+            context={"document": "This is a sample document to summarize."}
+        )
         result = renderer.render(nodes)
 
         # Expected output
@@ -74,8 +76,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_conditional_template_authenticated(self, parser, files_dir):
-        """Test conditional.pmd with authenticated user (true branch)."""
-        template_file = files_dir / "conditional.pmd"
+        """Test conditional.marg with authenticated user (true branch)."""
+        template_file = files_dir / "conditional.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -83,7 +85,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with authenticated context
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"is_authenticated": True, "username": "Bob", "status": "Premium"}
         )
         result = renderer.render(nodes)
@@ -103,8 +105,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_conditional_template_unauthenticated(self, parser, files_dir):
-        """Test conditional.pmd with unauthenticated user (false branch)."""
-        template_file = files_dir / "conditional.pmd"
+        """Test conditional.marg with unauthenticated user (false branch)."""
+        template_file = files_dir / "conditional.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -112,7 +114,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with unauthenticated context
-        renderer = PmdRenderer(context={"is_authenticated": False})
+        renderer = MargaritaRenderer(context={"is_authenticated": False})
         result = renderer.render(nodes)
 
         # Expected output
@@ -128,8 +130,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_loop_template(self, parser, files_dir):
-        """Test loop.pmd with for loop iteration."""
-        template_file = files_dir / "loop.pmd"
+        """Test loop.marg with for loop iteration."""
+        template_file = files_dir / "loop.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -137,7 +139,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with items
-        renderer = PmdRenderer(context={"items": ["Apple", "Banana", "Cherry"]})
+        renderer = MargaritaRenderer(context={"items": ["Apple", "Banana", "Cherry"]})
         result = renderer.render(nodes)
 
         # Expected output
@@ -155,8 +157,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_loop_template_empty(self, parser, files_dir):
-        """Test loop.pmd with empty items list."""
-        template_file = files_dir / "loop.pmd"
+        """Test loop.marg with empty items list."""
+        template_file = files_dir / "loop.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -164,7 +166,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with empty items
-        renderer = PmdRenderer(context={"items": []})
+        renderer = MargaritaRenderer(context={"items": []})
         result = renderer.render(nodes)
 
         # Expected output (loop body should not appear)
@@ -173,8 +175,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_complex_template_with_context(self, parser, files_dir):
-        """Test complex.pmd with nested if/for statements."""
-        template_file = files_dir / "complex.pmd"
+        """Test complex.marg with nested if/for statements."""
+        template_file = files_dir / "complex.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -186,7 +188,7 @@ class TestPmdIntegration:
         assert metadata["owner"] == "ai-team"
 
         # Render with context (has_context=True, format_json=False)
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={
                 "task_type": "question answering",
                 "has_context": True,
@@ -233,8 +235,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_complex_template_no_context(self, parser, files_dir):
-        """Test complex.pmd with has_context=False."""
-        template_file = files_dir / "complex.pmd"
+        """Test complex.marg with has_context=False."""
+        template_file = files_dir / "complex.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -242,7 +244,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with context (has_context=False, format_json=True)
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={
                 "task_type": "general inquiry",
                 "has_context": False,
@@ -276,8 +278,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_nested_template(self, parser, files_dir):
-        """Test nested.pmd with deeply nested structures."""
-        template_file = files_dir / "nested.pmd"
+        """Test nested.marg with deeply nested structures."""
+        template_file = files_dir / "nested.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -285,7 +287,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with show_categories=True, show_items=True
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={
                 "show_categories": True,
                 "categories": ["Electronics", "Books"],
@@ -317,8 +319,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_nested_template_no_items(self, parser, files_dir):
-        """Test nested.pmd with show_items=False."""
-        template_file = files_dir / "nested.pmd"
+        """Test nested.marg with show_items=False."""
+        template_file = files_dir / "nested.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -326,7 +328,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with show_categories=True, show_items=False
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"show_categories": True, "categories": ["Electronics"], "show_items": False}
         )
         result = renderer.render(nodes)
@@ -346,7 +348,7 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_include_template(self, parser, files_dir):
-        template_file = files_dir / "include.pmd"
+        template_file = files_dir / "include.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -354,7 +356,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"content": "This is the main content section."}, base_path=files_dir
         )
         result = renderer.render(nodes)
@@ -379,8 +381,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_unicode_template_happy(self, parser, files_dir):
-        """Test unicode.pmd with unicode characters and emojis (happy=True)."""
-        template_file = files_dir / "unicode.pmd"
+        """Test unicode.marg with unicode characters and emojis (happy=True)."""
+        template_file = files_dir / "unicode.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -392,7 +394,7 @@ class TestPmdIntegration:
         assert metadata["language"] == "mixed"
 
         # Render with happy=True
-        renderer = PmdRenderer(context={"name": "World", "happy": True})
+        renderer = MargaritaRenderer(context={"name": "World", "happy": True})
         result = renderer.render(nodes)
 
         # Expected output
@@ -412,8 +414,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_unicode_template_not_happy(self, parser, files_dir):
-        """Test unicode.pmd with unicode characters and emojis (happy=False)."""
-        template_file = files_dir / "unicode.pmd"
+        """Test unicode.marg with unicode characters and emojis (happy=False)."""
+        template_file = files_dir / "unicode.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -421,7 +423,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with happy=False
-        renderer = PmdRenderer(context={"name": "世界", "happy": False})
+        renderer = MargaritaRenderer(context={"name": "世界", "happy": False})
         result = renderer.render(nodes)
 
         # Expected output
@@ -441,8 +443,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_conditional_includes_when_conditional_is_true(self, parser, files_dir):
-        """Test conditional.pmd with include directives in branches."""
-        template_file = files_dir / "conditional_include.pmd"
+        """Test conditional.marg with include directives in branches."""
+        template_file = files_dir / "conditional_include.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -450,7 +452,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with authenticated context
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"include_extra": True, "name": "Batman"},
             base_path=files_dir,
         )
@@ -462,8 +464,8 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_conditional_includes_when_conditional_is_false(self, parser, files_dir):
-        """Test conditional.pmd with include directives in branches."""
-        template_file = files_dir / "conditional_include.pmd"
+        """Test conditional.marg with include directives in branches."""
+        template_file = files_dir / "conditional_include.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -471,7 +473,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with authenticated context
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"extra_content": False, "name": "Batman"}, base_path=files_dir
         )
         result = renderer.render(nodes)
@@ -490,8 +492,7 @@ class TestPmdIntegration:
         ],
     )
     def test_nested_conditionals(self, parser, files_dir, is_authenticated, is_admin, expected):
-        """Test nested conditionals in nested_conditional.pmd."""
-        template_file = files_dir / "nested_conditional.pmd"
+        template_file = files_dir / "nested_conditional.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -499,7 +500,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render with context
-        renderer = PmdRenderer(
+        renderer = MargaritaRenderer(
             context={"is_authenticated": is_authenticated, "is_admin": is_admin}
         )
         result = renderer.render(nodes)
@@ -507,8 +508,7 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_nested_includes_subdir(self, parser, files_dir):
-        """Test include.pmd with includes in a subdirectory."""
-        template_file = files_dir / "nested_includes.pmd"
+        template_file = files_dir / "nested_includes.marg"
         with open(template_file, encoding="utf-8") as f:
             content = f.read()
 
@@ -516,7 +516,7 @@ class TestPmdIntegration:
         metadata, nodes = parser.parse(content)
 
         # Render
-        renderer = PmdRenderer(context={}, base_path=files_dir)
+        renderer = MargaritaRenderer(context={}, base_path=files_dir)
         result = renderer.render(nodes)
 
         # Expected output (includes are rendered as placeholders)
@@ -525,13 +525,12 @@ class TestPmdIntegration:
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
 
     def test_all_templates_parse_without_error(self, parser, files_dir):
-        """Smoke test: ensure all .pmd files can be parsed without errors."""
-        pmd_files = sorted(files_dir.glob("*.pmd"))
+        margarita_files = sorted(files_dir.glob("*.marg"))
 
-        assert len(pmd_files) > 0, "No .pmd files found"
+        assert len(margarita_files) > 0, "No .marg files found"
 
         results = {}
-        for template_file in pmd_files:
+        for template_file in margarita_files:
             with open(template_file, encoding="utf-8") as f:
                 content = f.read()
 
@@ -552,11 +551,11 @@ class TestPmdIntegration:
             )
 
         # Verify we tested all expected files
-        assert "simple.pmd" in results
-        assert "metadata.pmd" in results
-        assert "conditional.pmd" in results
-        assert "loop.pmd" in results
-        assert "complex.pmd" in results
-        assert "nested.pmd" in results
-        assert "include.pmd" in results
-        assert "unicode.pmd" in results
+        assert "simple.marg" in results
+        assert "metadata.marg" in results
+        assert "conditional.marg" in results
+        assert "loop.marg" in results
+        assert "complex.marg" in results
+        assert "nested.marg" in results
+        assert "include.marg" in results
+        assert "unicode.marg" in results

@@ -4,7 +4,7 @@ Render lists and repeat sections using `for` loops.
 
 Syntax
 
-```pmd
+```margarita
 # Items
 
 {% for item in items %}

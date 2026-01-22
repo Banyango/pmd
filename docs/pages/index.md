@@ -1,6 +1,6 @@
-# PMD
+# MARGARITA
 
-PMD is a lightweight templating tool for building prompt and markdown templates with metadata, context, and simple control flow.
+MARGARITA is a lightweight templating tool for building prompt and markdown templates with metadata, context, and simple control flow.
 
 Key features
 
@@ -8,20 +8,20 @@ Key features
 - Template metadata for task information (e.g. `@task`, `@owner`)
 - Conditionals and loops for dynamic sections
 - Include files to compose templates across multiple fragments
-- CLI for rendering and metadata inspection (`pmd render`, `pmd metadata`)
+- CLI for rendering and metadata inspection (`margarita render`, `margarita metadata`)
 
 Quick example
 
-Create `hello.pmd` containing:
+Create `hello.marg` containing:
 
-```pmd
+```margarita
 Hello, {{name}}!
 ```
 
 Render with a JSON context:
 
 ```sh
-pmd render hello.pmd -c '{"name": "World"}'
+margarita render hello.marg -c '{"name": "World"}'
 ```
 
 Rendered result

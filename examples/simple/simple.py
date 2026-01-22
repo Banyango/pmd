@@ -1,5 +1,5 @@
-from pmd.parser import PmdParser
-from pmd.renderer import PmdRenderer
+from margarita.parser import MargaritaParser
+from margarita.renderer import MargaritaRenderer
 
 template = """
 You are a helpful assistant.
@@ -15,11 +15,11 @@ Please provide a detailed response.
 """
 
 # Parse the template
-parser = PmdParser()
+parser = MargaritaParser()
 metadata, nodes = parser.parse(template)
 
 # Create a renderer with context
-renderer = PmdRenderer(
+renderer = MargaritaRenderer(
     context={"task": "Summarize the key points", "context": "User is researching AI agents"}
 )
 

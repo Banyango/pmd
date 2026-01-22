@@ -1,10 +1,10 @@
 # Getting Started
 
-A minimal walkthrough to render your first PMD template.
+A minimal walkthrough to render your first MARGARITA template.
 
-1. Create a template file `greeting.pmd`:
+1. Create a template file `greeting.marg`:
 
-```pmd
+```margarita
 Hello, {{name}}!
 ```
 
@@ -17,7 +17,7 @@ Hello, {{name}}!
 3. Render the template with the CLI:
 
 ```sh
-pmd render greeting.pmd -f greeting.json
+margarita render greeting.marg -f greeting.json
 ```
 
 Rendered result
@@ -31,7 +31,7 @@ Hello, Alice!
 Alternate options
 
 - Pass context as a JSON string: `-c '{"name": "Bob"}'`
-- Render a directory of `.pmd` files: `pmd render templates/ -o output/`
-- Inspect template metadata before rendering: `pmd render template.pmd --show-metadata`
+- Render a directory of `.marg` files: `margarita render templates/ -o output/`
+- Inspect template metadata before rendering: `margarita render template.marg --show-metadata`
 
-Tip: When rendering a single file, PMD will auto-detect a same-name `.json` file (e.g. `greeting.json`) if no context is supplied.
+Tip: When rendering a single file, MARGARITA will auto-detect a same-name `.json` file (e.g. `greeting.json`) if no context is supplied.

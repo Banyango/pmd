@@ -1,9 +1,0 @@
-@task: include-example
-
-{% include "header.pmd" %}
-
-# Main Content
-{{content}}
-
-{% include "footer.pmd" %}
-

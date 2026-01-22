@@ -1,7 +1,7 @@
-site_name: PMD
+site_name: MARGARITA
 nav:
   - 📚 Documentation:
-    - PMD: index.md
+    - MARGARITA: index.md
     - Getting Started: getting_started.md
     - Language Reference:
         - Contexts: contexts.md
@@ -14,8 +14,8 @@ nav:
         - Includes For Organized Prompts: includes.md
         - Agentic Loops: use-in-agents.md
 
-repo_url: https://github.com/banyango/pmd
-repo_name: banyango/pmd
+repo_url: https://github.com/banyango/margarita
+repo_name: banyango/margarita
 theme:
   icon:
     logo: material/puzzle

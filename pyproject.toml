@@ -1,5 +1,5 @@
 [project]
-name = "pmd"
+name = "margarita"
 version = "0.1.0"
 description = "A lightweight markup language and Python library for writing, composing, and rendering structured LLM prompts."
 readme = "README.md"
@@ -11,7 +11,7 @@ authors = [
 maintainers = [
     { name = "Kyle Reczek", email = "kyle@banyango.com" }
 ]
-keywords = ["prompt-engineering", "templating", "pmd", "llm", "markup"]
+keywords = ["prompt-engineering", "templating", "margarita", "llm", "markup"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -32,7 +32,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pmd = "pmd.cli:main"
+margarita = "margarita.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -50,18 +50,18 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Banyango/pmd"
-Documentation = "https://banyango.github.io/pmd"
-Repository = "https://github.com/Banyango/pmd"
-Issues = "https://github.com/Banyango/pmd/issues"
-Changelog = "https://github.com/Banyango/pmd/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Banyango/margarita"
+Documentation = "https://banyango.github.io/margarita"
+Repository = "https://github.com/Banyango/margarita"
+Issues = "https://github.com/Banyango/margarita/issues"
+Changelog = "https://github.com/Banyango/margarita/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/pmd"]
+packages = ["src/margarita"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"
@@ -75,7 +75,7 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.coverage.run]
-source = ["pmd"]
+source = ["margarita"]
 branch = true
 
 [tool.coverage.report]
@@ -127,7 +127,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["pmd"]
+known-first-party = ["margarita"]
 
 [tool.mypy]
 python_version = "3.10"
