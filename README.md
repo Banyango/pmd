@@ -7,6 +7,8 @@ Margarita is a lightweight markup language and Python library for writing, compo
 
 Margarita targets prompt engineering workflows where clarity, versioning, and correctness matter.
 
+| FOR NOW! CLI tool is WIP you will need to download the source and install it locally to use the `margarita` command. |
+
 ## Features
 
 - ✨ Framework agnostic — works with any LLM or API
@@ -48,7 +50,72 @@ Welcome to Margarita templating.
 
 ## Python Library
 
-TBD
+Install the package via pip/poetry/uv/etc or whatever package manager you prefer:
+
+```bash
+pip install margarita
+poetry add margarita
+uv add margarita
+```
+
+Use the library in your Python code:
+
+```python
+from margarita.parser import Parser
+from margarita.renderer import Renderer
+
+template = """
+You are a helpful assistant.
+
+Task: {{task}}
+
+{% if context %}
+Context:
+{{context}}
+{% endif %}
+
+Please provide a detailed response.
+"""
+
+# Parse the template
+parser = Parser()
+metadata, nodes = parser.parse(template)
+
+# Create a renderer with context
+renderer = Renderer(
+    context={"task": "Summarize the key points", "context": "User is researching AI agents"}
+)
+
+# Render the output
+prompt = renderer.render(nodes)
+print(prompt)
+```
+
+Use the Composer to manage multiple templates:
+
+```python
+from margarita.composer import Composer
+from pathlib import Path
+
+manager = Composer(Path("./templates"))
+
+# Compose a complex prompt from multiple snippets
+prompt = manager.compose_prompt(
+    snippets=[
+        "snippets/system_role.marg",
+        "snippets/task_context.marg",
+        "snippets/chain_of_thought.marg",
+        "snippets/output_format.marg"
+    ],
+    context={
+        "role": "data scientist",
+        "user_name": "Bob",
+        "task": "Analyze customer churn",
+        "format": "JSON",
+        "tone": "analytical"
+    }
+)
+```
 
 ## Documentation
 
