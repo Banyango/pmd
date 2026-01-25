@@ -1,23 +1,25 @@
 # Include Files
 
-Reuse template fragments using `{% include "file.marg" %}`. Includes are resolved relative to the including template's directory.
+Reuse template fragments using `[[ filename ]]`. Includes are resolved relative to the including template's directory.
 
 Example
 
 `header.marg`:
 
 ```margarita
-This is the header content.
+<<This is the header content.>>
 ```
 
 `page.marg`:
 
 ```margarita
-{% include "header.marg" %}
+[[ header.marg ]]
 
+<<
 # Page Title
 
 Content goes here using the same context.
+>>
 ```
 
 Rendered result
@@ -49,7 +51,7 @@ from margarita.renderer import Renderer
 
 # Parse your template
 parser = Parser()
-template = '{% include "header.marg" %}\n\nMain content here.'
+template = '[[ header.marg ]]\n\n<<Main content here.>>'
 _, nodes = parser.parse(template)
 
 # Set base_path - all includes resolve from here
@@ -64,8 +66,8 @@ output = renderer.render(nodes)
 **Important**: Even in nested includes, all paths are from `base_path`. If `snippets/section.marg` includes another file, it must use the full path from `base_path`:
 
 ```margarita
-{# Inside templates/snippets/section.marg #}
-{% include "snippets/subsection.marg" %}  {# NOT just "subsection.marg" #}
+// Inside templates/snippets/section.marg
+[[ snippets/subsection.marg ]]  // NOT just "subsection.marg"
 ```
 
 See the [Using Includes](includes.md) page for comprehensive examples and patterns.

@@ -5,11 +5,13 @@ Render lists and repeat sections using `for` loops.
 Syntax
 
 ```margarita
+<<
 # Items
 
-{% for item in items %}
-- {{item}}
-{% endfor %}
+>>
+for item in items:
+    <<- ${item}
+>>
 ```
 
 Example context

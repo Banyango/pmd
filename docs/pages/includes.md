@@ -19,11 +19,11 @@ template_dir = Path("./templates")
 # Parse your main template
 parser = Parser()
 template_content = """
-{% include "header.marg" %}
+[[ header.marg ]]
 
-Main content here.
+<<Main content here.>>
 
-{% include "footer.marg" %}
+[[ footer.marg ]]
 """
 
 metadata, nodes = parser.parse(template_content)
@@ -46,25 +46,29 @@ Create a library of reusable prompt components:
 
 **templates/snippets/system_role.marg**:
 ```margarita
-You are {{role}}, a helpful AI assistant.
+<<You are ${role}, a helpful AI assistant.>>
 ```
 
 **templates/snippets/task_context.marg**:
 ```margarita
+<<
 ## Task Context
 
-User: {{user_name}}
-Session: {{session_id}}
-Timestamp: {{timestamp}}
+User: ${user_name}
+Session: ${session_id}
+Timestamp: ${timestamp}
+>>
 ```
 
 **templates/snippets/output_format.marg**:
 ```margarita
+<<
 ## Output Requirements
 
-- Provide responses in {{format}} format
-- Keep responses {{length}}
-- Use {{tone}} tone
+- Provide responses in ${format} format
+- Keep responses ${length}
+- Use ${tone} tone
+>>
 ```
 
 ### Using the Snippets
@@ -76,15 +80,17 @@ from margarita.renderer import Renderer
 
 # Main template that composes snippets
 main_template = """
-{% include "snippets/system_role.marg" %}
+[[ snippets/system_role.marg ]]
 
-{% include "snippets/task_context.marg" %}
+[[ snippets/task_context.marg ]]
 
+<<
 ## User Request
 
-{{user_request}}
+${user_request}
+>>
 
-{% include "snippets/output_format.marg" %}
+[[ snippets/output_format.marg ]]
 """
 
 # Parse and render
@@ -149,21 +155,21 @@ from margarita.parser import Parser
 from margarita.renderer import Renderer
 # Template with conditional includes
 template = """
-{% include "snippets/system_role.marg" %}
+[[ snippets/system_role.marg ]]
 
-{% if use_examples %}
-{% include "snippets/few_shot_examples.marg" %}
-{% endif %}
+if use_examples:
+    [[ snippets/few_shot_examples.marg ]]
 
+<<
 ## Task
 
-{{task}}
+${task}
+>>
 
-{% if detailed_output %}
-{% include "snippets/detailed_format.marg" %}
-{% else %}
-{% include "snippets/brief_format.marg" %}
-{% endif %}
+if detailed_output:
+    [[ snippets/detailed_format.marg ]]
+else:
+    [[ snippets/brief_format.marg ]]
 """
 
 parser = Parser()
@@ -205,18 +211,18 @@ templates/
 
 **templates/snippets/complete_prompt.marg**:
 ```margarita
-{% include "snippets/header_section.marg" %}
+[[ snippets/header_section.marg ]]
 
-{% include "snippets/body_section.marg" %}
+[[ snippets/body_section.marg ]]
 
-{% include "snippets/footer_section.marg" %}
+[[ snippets/footer_section.marg ]]
 ```
 
 **templates/snippets/header_section.marg**:
 ```margarita
-{% include "snippets/system_role.marg" %}
+[[ snippets/system_role.marg ]]
 
-{% include "snippets/safety_guidelines.marg" %}
+[[ snippets/safety_guidelines.marg ]]
 ```
 
 Notice that even though `header_section.marg` is in the `snippets/` directory, it **still uses `"snippets/system_role.marg"`** in its include statement, not just `"system_role.marg"`. This is because all paths are resolved from `base_path`.
@@ -230,7 +236,7 @@ from margarita.renderer import Renderer
 
 # Parse the main template
 parser = Parser()
-_, nodes = parser.parse('{% include "snippets/complete_prompt.marg" %}')
+_, nodes = parser.parse('[[ snippets/complete_prompt.marg ]]')
 
 # Set base_path to templates/
 renderer = Renderer(
@@ -251,31 +257,31 @@ You can nest includes as deeply as needed:
 
 **templates/layouts/full_prompt.marg**:
 ```margarita
-{% include "sections/preamble.marg" %}
+[[ sections/preamble.marg ]]
 
-{% include "sections/main_content.marg" %}
+[[ sections/main_content.marg ]]
 
-{% include "sections/conclusion.marg" %}
+[[ sections/conclusion.marg ]]
 ```
 
 **templates/sections/preamble.marg**:
 ```margarita
-{% include "components/header.marg" %}
+[[ components/header.marg ]]
 
-{% include "components/instructions.marg" %}
+[[ components/instructions.marg ]]
 ```
 
 **templates/components/header.marg**:
 ```margarita
-{% include "atoms/logo.marg" %}
+[[ atoms/logo.marg ]]
 
-{% include "atoms/title.marg" %}
+[[ atoms/title.marg ]]
 ```
 
 ```python
 # All paths resolve from base_path, no matter how deep the nesting
 parser = Parser()
-_, nodes = parser.parse('{% include "layouts/full_prompt.marg" %}')
+_, nodes = parser.parse('[[ layouts/full_prompt.marg ]]')
 
 renderer = Renderer(
     context={"title": "My Prompt"},
@@ -292,11 +298,11 @@ This design makes your templates portable and predictable:
 ```python
 # ✅ CORRECT: All paths from base_path
 # templates/snippets/section.marg contains:
-{% include "snippets/subsection.marg" %}
+[[ snippets/subsection.marg ]]
 
 # ❌ WRONG: Don't use relative paths from the current file
 # templates/snippets/section.marg should NOT contain:
-{% include "subsection.marg" %}  # This won't work!
+[[ subsection.marg ]]  # This won't work!
 ```
 
 ### Practical Tip: Organizing Nested Structures
@@ -353,7 +359,7 @@ def safe_render(template_content: str, context: dict, base_path: Path) -> str:
 
 # Usage
 result = safe_render(
-    '{% include "optional_snippet.marg" %}\nMain content.',
+    '[[ optional_snippet.marg ]]\n<<Main content.>>',
     context={},
     base_path=Path("./templates")
 )
@@ -384,12 +390,12 @@ templates/
 
 ```python
 # Good: Clear, descriptive names
-{% include "snippets/system/expert_role.marg" %}
-{% include "snippets/formatting/structured_json_output.marg" %}
+[[ snippets/system/expert_role.marg ]]
+[[ snippets/formatting/structured_json_output.marg ]]
 
 # Avoid: Vague names
-{% include "snippets/s1.marg" %}
-{% include "snippets/format.marg" %}
+[[ snippets/s1.marg ]]
+[[ snippets/format.marg ]]
 ```
 
 ### 3. Keep Snippets Focused
@@ -399,15 +405,17 @@ Each snippet should have a single, clear purpose:
 ```margarita
 # Good: Focused snippet
 # file: role_definition.marg
-You are a {{role}} with expertise in {{domain}}.
+<<You are a ${role} with expertise in ${domain}.>>
 ```
 
 ```margarita
 # Avoid: Mixing multiple concerns
 # file: everything.marg
-You are a {{role}}.
-Task: {{task}}
-Output format: {{format}}
+<<
+You are a ${role}.
+Task: ${task}
+Output format: ${format}
+>>
 ```
 
 ### 4. Document Snippet Context Requirements
@@ -424,7 +432,7 @@ required_context:
   - expertise_level
 ---
 
-You are a {{role}} with {{expertise_level}} expertise in {{domain}}.
+<<You are a ${role} with ${expertise_level} expertise in ${domain}.>>
 ```
 
 ### 5. Cache Parsed Templates
@@ -499,11 +507,11 @@ class AgentPromptBuilder:
 
         # Build the main template
         template = "\n\n".join([
-            f'{{% include "{snippet}" %}}'
+            f'[[ {snippet} ]]'
             for snippet in snippets
         ])
 
-        template += f"\n\n## Current Task\n\n{task}"
+        template += f"\n\n<<## Current Task\n\n{task}>>"
 
         # Render
         _, nodes = self.parser.parse(template)

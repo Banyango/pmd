@@ -23,8 +23,8 @@ Here's a Hello World example. helloworld.marg contains the template, and hellowo
 ```markdown:helloworld.marg
 // file:helloworld.marg
 
-Hello, {{name}}!
-Welcome to Margarita templating.
+<< Hello, ${name}!
+Welcome to Margarita templating. >>
 ```
 
 ```json:helloworld.json
@@ -65,16 +65,15 @@ from margarita.parser import Parser
 from margarita.renderer import Renderer
 
 template = """
-You are a helpful assistant.
+<< You are a helpful assistant.
 
-Task: {{task}}
+Task: ${task} >>
 
-{% if context %}
-Context:
-{{context}}
-{% endif %}
+if context:
+    << Context:
+    ${context} >>
 
-Please provide a detailed response.
+<< Please provide a detailed response. >>
 """
 
 # Parse the template

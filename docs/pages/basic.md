@@ -13,16 +13,19 @@ Render a template programmatically:
 ```python
 # Define your template
 template = """
+<<
 You are a helpful assistant.
 
-Task: {{task}}
+Task: ${task}
 
-{% if context %}
-Context:
-{{context}}
-{% endif %}
+if context:
+    <<
+    Context:
+    ${context}
+    >>
 
 Please provide a detailed response.
+>>
 """
 
 # Parse the template

@@ -5,7 +5,7 @@ A minimal walkthrough to render your first MARGARITA template.
 1. Create a template file `greeting.marg`:
 
 ```margarita
-Hello, {{name}}!
+<<Hello, ${name}!>>
 ```
 
 2. Provide a context (JSON) either inline or in a file `greeting.json`:

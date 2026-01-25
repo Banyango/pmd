@@ -15,7 +15,7 @@ Quick example
 Create `hello.marg` containing:
 
 ```margarita
-Hello, {{name}}!
+<<Hello, ${name}!>>
 ```
 
 Render with a JSON context:

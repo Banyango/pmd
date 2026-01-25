@@ -9,7 +9,7 @@ Example
 @owner: docs-team
 @version: 2.0
 
-Hello, {{name}}!
+<<Hello, ${name}!>>
 ```
 
 Behavior and precedence

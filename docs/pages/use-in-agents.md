@@ -104,33 +104,40 @@ version: 1.0.0
 description: Iterative research prompt for agent loops
 ---
 
-You are a research assistant conducting iteration {{iteration}} of your research.
+<<
+You are a research assistant conducting iteration ${iteration} of your research.
 
-Topic: {{topic}}
+Topic: ${topic}
 
-{% if previous_findings %}
-## Previous Findings
+>>
+if previous_findings:
+    <<
+    ## Previous Findings
 
-{% for finding in previous_findings %}
-### Iteration {{finding.iteration}}
-{{finding.result}}
+    >>
+    for finding in previous_findings:
+        <<
+        ### Iteration ${finding.iteration}
+        ${finding.result}
 
-{% endfor %}
-{% endif %}
+        >>
 
-{% if history %}
-## Conversation History
+if history:
+    <<
+    ## Conversation History
 
-{% for message in history %}
-**{{message.role}}**: {{message.content}}
+    >>
+    for message in history:
+        <<**${message.role}**: ${message.content}
 
-{% endfor %}
-{% endif %}
+        >>
 
+<<
 ## Your Task
 
 Continue researching this topic. Build upon previous findings and provide new insights.
 When your research is complete, include the word COMPLETE in your response.
+>>
 ```
 
 ### summary.marg
@@ -142,29 +149,34 @@ version: 1.0.0
 description: Generate final summary from research findings
 ---
 
+<<
 # Research Summary
 
-Topic: {{topic}}
-Total Iterations: {{total_iterations}}
+Topic: ${topic}
+Total Iterations: ${total_iterations}
 
 ## All Findings
 
-{% for finding in findings %}
-### Research Phase {{finding.iteration}}
+>>
+for finding in findings:
+    <<
+    ### Research Phase ${finding.iteration}
 
-**Query**: {{finding.query}}
+    **Query**: ${finding.query}
 
-**Results**:
-{{finding.result}}
+    **Results**:
+    ${finding.result}
 
----
+    ---
 
-{% endfor %}
+    >>
 
+<<
 ## Your Task
 
 Synthesize all the above findings into a coherent, comprehensive summary.
 Highlight key insights and actionable takeaways.
+>>
 ```
 
 ## Dynamic Context Updates
