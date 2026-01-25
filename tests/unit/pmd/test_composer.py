@@ -27,12 +27,12 @@ class TestMargaritaComposer:
         assert len(self.composer._template_cache) == 0
 
     def test_load_template_should_parse_template_when_template_valid(self):
-        self._create_template("simple.marg", "Hello, {{name}}!")
+        self._create_template("simple.marg", "<<Hello, ${name}!>>")
 
         metadata, nodes = self.composer.load_template("simple.marg")
 
         assert metadata == {}
-        assert len(nodes) == 3  # TextNode, VariableNode, TextNode
+        assert len(nodes) == 1  # TextNode with interpolation
         assert "simple.marg" in self.composer._template_cache
 
     def test_load_template_should_load_when_has_metadata(self):
@@ -41,7 +41,7 @@ class TestMargaritaComposer:
 @version: 1.0.0
 ---
 
-Hello, {{name}}!"""
+<<Hello, ${name}!>>"""
         self._create_template("metadata.marg", template_content)
 
         metadata, nodes = self.composer.load_template("metadata.marg")
@@ -50,11 +50,11 @@ Hello, {{name}}!"""
         assert len(nodes) > 0
 
     def test_load_template_should_use_cache_when_template_already_loaded(self):
-        self._create_template("cached.marg", "Content")
+        self._create_template("cached.marg", "<<Content>>")
 
         result1 = self.composer.load_template("cached.marg")
 
-        self._create_template("cached.marg", "Modified content")
+        self._create_template("cached.marg", "<<Modified content>>")
 
         result2 = self.composer.load_template("cached.marg")
 
@@ -62,7 +62,7 @@ Hello, {{name}}!"""
         assert "cached.marg" in self.composer._template_cache
 
     def test_load_template_should_load_template_when_in_subdirectory(self):
-        self._create_template("snippets/header.marg", "# Header\n")
+        self._create_template("snippets/header.marg", "<<# Header>>")
 
         metadata, nodes = self.composer.load_template("snippets/header.marg")
 
@@ -70,16 +70,15 @@ Hello, {{name}}!"""
         assert "snippets/header.marg" in self.composer._template_cache
 
     def test_render_should_render_template_when_template_is_simple(self):
-        self._create_template("greeting.marg", "Hello, {{name}}!")
+        self._create_template("greeting.marg", "<<Hello, ${name}!>>")
 
         result = self.composer.render("greeting.marg", {"name": "Alice"})
 
-        assert result == "Hello, Alice!"
+        assert result == "Hello, Alice!\n"
 
     def test_render_should_render_conditionals_when_template_has_if_statements(self):
-        template_content = """{% if show_greeting %}
-Hello, {{name}}!
-{% endif %}"""
+        template_content = """if show_greeting:
+    <<Hello, ${name}!>>"""
         self._create_template("conditional.marg", template_content)
 
         # Test with condition true
@@ -91,10 +90,9 @@ Hello, {{name}}!
         assert "Hello, Bob!" not in result2
 
     def test_render_should_render_loops_when_template_has_for_statements(self):
-        template_content = """Items:
-{% for item in items %}
-- {{item}}
-{% endfor %}"""
+        template_content = """<<Items:>>
+for item in items:
+    <<- ${item}>>"""
         self._create_template("loop.marg", template_content)
 
         result = self.composer.render("loop.marg", {"items": ["apple", "banana", "cherry"]})
@@ -104,12 +102,12 @@ Hello, {{name}}!
         assert "- cherry" in result
 
     def test_render_should_render_includes_when_template_has_include_statements(self):
-        self._create_template("header.marg", "# {{title}}\n")
+        self._create_template("header.marg", "<<# ${title}>>")
         self._create_template(
             "main.marg",
-            """{% include "header.marg" %}
+            """[[ header.marg ]]
 
-Content here.""",
+<<Content here.>>""",
         )
 
         result = self.composer.render("main.marg", {"title": "My Document"})
@@ -118,9 +116,9 @@ Content here.""",
         assert "Content here." in result
 
     def test_render_should_render_nested_includes_when_template_has_nested_includes(self):
-        self._create_template("snippets/role.marg", "You are a {{role}}.")
-        self._create_template("snippets/header.marg", '{% include "snippets/role.marg" %}\n')
-        self._create_template("main.marg", '{% include "snippets/header.marg" %}\n\nTask: {{task}}')
+        self._create_template("snippets/role.marg", "<<You are a ${role}.>>")
+        self._create_template("snippets/header.marg", "[[ snippets/role.marg ]]")
+        self._create_template("main.marg", "[[ snippets/header.marg ]]\n\n<<Task: ${task}>>")
 
         result = self.composer.render("main.marg", {"role": "assistant", "task": "Help the user"})
 
@@ -128,24 +126,24 @@ Content here.""",
         assert "Task: Help the user" in result
 
     def test_render_should_render_template_when_context_is_empty(self):
-        self._create_template("empty.marg", "No variables here.")
+        self._create_template("empty.marg", "<<No variables here.>>")
 
         result = self.composer.render("empty.marg", {})
 
-        assert result == "No variables here."
+        assert result == "No variables here.\n"
 
     def test_render_should_render_empty_string_when_variable_is_missing(self):
-        self._create_template("missing.marg", "Hello, {{name}}!")
+        self._create_template("missing.marg", "<<Hello, ${name}!>>")
 
         result = self.composer.render("missing.marg", {})
 
         # Missing variables should render as empty string
-        assert result == "Hello, !"
+        assert result == "Hello, !\n"
 
     def test_compose_prompt_should_compose_snippets_when_snippets_are_simple(self):
-        self._create_template("intro.marg", "Introduction: {{topic}}")
-        self._create_template("body.marg", "Details about {{topic}}")
-        self._create_template("outro.marg", "Conclusion")
+        self._create_template("intro.marg", "<<Introduction: ${topic}>>")
+        self._create_template("body.marg", "<<Details about ${topic}>>")
+        self._create_template("outro.marg", "<<Conclusion>>")
 
         result = self.composer.compose_prompt(
             snippets=["intro.marg", "body.marg", "outro.marg"], context={"topic": "testing"}
@@ -158,22 +156,22 @@ Content here.""",
         assert "\n\n" in result
 
     def test_compose_prompt_should_use_separator_when_custom_separator_provided(self):
-        self._create_template("part1.marg", "Part 1")
-        self._create_template("part2.marg", "Part 2")
-        self._create_template("part3.marg", "Part 3")
+        self._create_template("part1.marg", "<<Part 1>>")
+        self._create_template("part2.marg", "<<Part 2>>")
+        self._create_template("part3.marg", "<<Part 3>>")
 
         result = self.composer.compose_prompt(
             snippets=["part1.marg", "part2.marg", "part3.marg"], context={}, separator=" | "
         )
 
-        assert result == "Part 1 | Part 2 | Part 3"
+        assert result == "Part 1\n | Part 2\n | Part 3\n"
 
     def test_compose_prompt_should_compose_when_single_snippet_provided(self):
-        self._create_template("single.marg", "Only one: {{value}}")
+        self._create_template("single.marg", "<<Only one: ${value}>>")
 
         result = self.composer.compose_prompt(snippets=["single.marg"], context={"value": "test"})
 
-        assert result == "Only one: test"
+        assert result == "Only one: test\n"
 
     def test_compose_prompt_should_return_empty_string_when_snippets_list_is_empty(self):
         result = self.composer.compose_prompt(snippets=[], context={})
@@ -181,9 +179,9 @@ Content here.""",
         assert result == ""
 
     def test_compose_prompt_should_compose_snippets_when_variables_provided(self):
-        self._create_template("role.marg", "You are a {{role}}.")
-        self._create_template("task.marg", "Your task: {{task}}")
-        self._create_template("format.marg", "Output format: {{format}}")
+        self._create_template("role.marg", "<<You are a ${role}.>>")
+        self._create_template("task.marg", "<<Your task: ${task}>>")
+        self._create_template("format.marg", "<<Output format: ${format}>>")
 
         result = self.composer.compose_prompt(
             snippets=["role.marg", "task.marg", "format.marg"],
@@ -195,9 +193,9 @@ Content here.""",
         assert "Output format: JSON" in result
 
     def test_compose_prompt_should_compose_snippets_when_in_subdirectories(self):
-        self._create_template("system/role.marg", "Role: {{role}}")
-        self._create_template("tasks/main.marg", "Task: {{task}}")
-        self._create_template("output/format.marg", "Format: {{format}}")
+        self._create_template("system/role.marg", "<<Role: ${role}>>")
+        self._create_template("tasks/main.marg", "<<Task: ${task}>>")
+        self._create_template("output/format.marg", "<<Format: ${format}>>")
 
         result = self.composer.compose_prompt(
             snippets=["system/role.marg", "tasks/main.marg", "output/format.marg"],
@@ -223,7 +221,7 @@ Content here.""",
             self.composer.compose_prompt(snippets=["exists.marg", "missing.marg"], context={})
 
     def test_multiple_composers_should_have_independent_caches_when_created(self):
-        self._create_template("test.marg", "Content")
+        self._create_template("test.marg", "<<Content>>")
 
         composer1 = Composer(self.template_dir)
         composer2 = Composer(self.template_dir)
@@ -234,7 +232,7 @@ Content here.""",
         assert "test.marg" not in composer2._template_cache
 
     def test_render_should_render_template_when_using_dotted_variables(self):
-        self._create_template("dotted.marg", "User: {{user.name}}, ID: {{user.id}}")
+        self._create_template("dotted.marg", "<<User: ${user.name}, ID: ${user.id}>>")
 
         result = self.composer.render("dotted.marg", {"user": {"name": "Alice", "id": 42}})
 
@@ -246,7 +244,7 @@ Content here.""",
 @version: 1.0.0
 ---
 
-Value: {{value}}"""
+<<Value: ${value}>>"""
         self._create_template("meta.marg", template_content)
 
         result = self.composer.render("meta.marg", {"value": "test"})
@@ -256,15 +254,14 @@ Value: {{value}}"""
 
     def test_compose_prompt_should_compose_multi_level_structure_when_complex(self):
         # Create a multi-level prompt structure
-        self._create_template("components/role.marg", "You are a {{role}} assistant.")
-        self._create_template("components/context.marg", "Context: {{context}}")
-        self._create_template("components/task.marg", "Task: {{task}}")
+        self._create_template("components/role.marg", "<<You are a ${role} assistant.>>")
+        self._create_template("components/context.marg", "<<Context: ${context}>>")
+        self._create_template("components/task.marg", "<<Task: ${task}>>")
         self._create_template(
             "components/constraints.marg",
-            """Constraints:
-{% for constraint in constraints %}
-- {{constraint}}
-{% endfor %}""",
+            """<<Constraints:>>
+for constraint in constraints:
+    <<- ${constraint}>>""",
         )
 
         result = self.composer.compose_prompt(

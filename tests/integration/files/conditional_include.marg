@@ -1,6 +1,9 @@
 @task: conditional-include
 
+<<
+
 Test Conditional Include
-{% if include_extra %}
-{% include "extra_content.marg" %}
-{% endif %}
+>>
+if include_extra:
+    [[ extra_content.marg ]]
+

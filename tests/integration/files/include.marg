@@ -1,9 +1,18 @@
 @task: include-example
 
-{% include "header.marg" %}
+<<
+
+>>
+[[ header.marg ]]
+
+<<
 
 # Main Content
-{{content}}
+${content}
 
-{% include "footer.marg" %}
+>>
+[[ footer.marg ]]
 
+<<
+
+>>
