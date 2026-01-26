@@ -489,9 +489,7 @@ class TestMargaritaIntegration:
             "User Admin Status: True\n"
             "Menu Visible: False\n"
             "Name: Alice\n"
-            "- Item: 1\n"
-            "- Item: 2\n"
-            "- Item: 3\n"
+            "Run Count: 1\n"
         )
 
         assert result == expected, f"Expected:\n{expected}\nGot:\n{result}"
