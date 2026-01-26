@@ -56,13 +56,14 @@ class Renderer:
         if isinstance(node, TextNode):
             # Process ${variable} syntax in text
             content = node.content
+
             # Replace ${var} with actual values
             def replace_var(match):
                 var_name = match.group(1)
                 value = self._get_variable_value(var_name)
                 return str(value) if value is not None else ""
 
-            content = re.sub(r'\$\{([\w\.]+)\}', replace_var, content)
+            content = re.sub(r"\$\{([\w\.]+)\}", replace_var, content)
             return content
 
         elif isinstance(node, VariableNode):
@@ -99,7 +100,6 @@ class Renderer:
             return "".join(output)
 
         elif isinstance(node, IncludeNode):
-
             template_name = node.template_name
             if not template_name.endswith(".mg"):
                 template_name += ".mg"

@@ -77,7 +77,7 @@ class Parser:
 
     def _preprocess(self, template: str) -> None:
         """Preprocess the template to extract metadata and prepare lines."""
-        lines = template.split('\n')
+        lines = template.split("\n")
         self.lines = []
 
         # Check for metadata block at the beginning (enclosed by ---)
@@ -89,7 +89,7 @@ class Parser:
             i += 1
 
         # Check if we have metadata block
-        if i < len(lines) and lines[i].strip() == '---':
+        if i < len(lines) and lines[i].strip() == "---":
             # Found metadata block
             i += 1  # Skip opening ---
 
@@ -99,12 +99,12 @@ class Parser:
                 stripped = line.strip()
 
                 # Check for closing delimiter
-                if stripped == '---':
+                if stripped == "---":
                     i += 1  # Skip closing ---
                     break
 
                 # Parse metadata line
-                metadata_match = re.match(r'^(\w+):\s*(.+)$', stripped)
+                metadata_match = re.match(r"^(\w+):\s*(.+)$", stripped)
                 if metadata_match:
                     self.metadata[metadata_match.group(1)] = metadata_match.group(2).strip()
                 i += 1
@@ -117,7 +117,7 @@ class Parser:
             line = lines[j]
 
             # Check for comments (skip them)
-            if line.strip().startswith('//'):
+            if line.strip().startswith("//"):
                 continue
 
             # Calculate indentation level (number of leading spaces / 4)
@@ -142,11 +142,11 @@ class Parser:
                 continue
 
             # Check for control structures
-            if_match = re.match(r'^if\s+(\w+):$', stripped)
-            for_match = re.match(r'^for\s+(\w+)\s+in\s+(\w+):$', stripped)
-            else_match = re.match(r'^else:$', stripped)
-            include_match = re.match(r'^\[\[\s*([^]]+)\s*]]$', stripped)
-            text_block_start = stripped.startswith('<<')
+            if_match = re.match(r"^if\s+(\w+):$", stripped)
+            for_match = re.match(r"^for\s+(\w+)\s+in\s+(\w+):$", stripped)
+            else_match = re.match(r"^else:$", stripped)
+            include_match = re.match(r"^\[\[\s*([^]]+)\s*]]$", stripped)
+            text_block_start = stripped.startswith("<<")
 
             if if_match:
                 # Parse if statement
@@ -159,7 +159,7 @@ class Parser:
                 false_block = None
                 if self.pos < len(self.lines):
                     next_indent, next_line = self.lines[self.pos]
-                    if next_indent == indent and next_line.strip() == 'else:':
+                    if next_indent == indent and next_line.strip() == "else:":
                         self.pos += 1
                         # Parse the false block - content should be more indented than the else
                         false_block = self._parse_block(indent)
@@ -217,17 +217,17 @@ class Parser:
         indent, first_line = self.lines[self.pos]
 
         # Check if it's a single-line text block
-        if first_line.strip().startswith('<<') and first_line.strip().endswith('>>'):
+        if first_line.strip().startswith("<<") and first_line.strip().endswith(">>"):
             # Single line block
             content = first_line.strip()[2:-2].strip()
             self.pos += 1
             # Process variables in the content
             processed = self._process_text_variables(content)
             # Add newline after text block
-            return processed + '\n' if processed else processed
+            return processed + "\n" if processed else processed
 
         # Multi-line block
-        if not first_line.strip().startswith('<<'):
+        if not first_line.strip().startswith("<<"):
             return ""
 
         # The block's base indentation is the indentation of the << line
@@ -247,7 +247,7 @@ class Parser:
             line_indent, line = self.lines[self.pos]
             stripped = line.strip()
 
-            if stripped == '>>':
+            if stripped == ">>":
                 self.pos += 1  # Skip the >> line
                 break
 
@@ -262,18 +262,18 @@ class Parser:
                     dedented_line = line
             else:
                 # Empty line
-                dedented_line = ''
+                dedented_line = ""
 
             content_lines.append(dedented_line)
             self.pos += 1
 
-        content = '\n'.join(content_lines)
+        content = "\n".join(content_lines)
         # Process variables in the content
         processed = self._process_text_variables(content)
         # Always add a trailing newline to text blocks to ensure proper spacing
         # Special case: if content_lines has content (even if empty strings), add newline
         if processed or content_lines:
-            processed += '\n'
+            processed += "\n"
         return processed
 
     def _process_text_variables(self, text: str) -> str:
@@ -288,7 +288,3 @@ class Parser:
         # Let's use a placeholder approach: we'll keep ${var} as is in TextNode
         # and the renderer will handle the substitution
         return text
-
-
-
-

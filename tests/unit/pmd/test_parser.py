@@ -4,7 +4,6 @@ from margarita.parser import (
     IncludeNode,
     Parser,
     TextNode,
-    VariableNode,
 )
 
 
@@ -144,7 +143,7 @@ else:
         assert for_node.iterator == "item"
 
     def test_parse_should_parse_include_when_template_has_include_directive(self):
-        template = '[[ header.mg ]]'
+        template = "[[ header.mg ]]"
         _, nodes = self.parser.parse(template)
 
         assert len(nodes) == 1
