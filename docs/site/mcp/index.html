@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../basic/">
+        <link rel="prev" href="../contexts/">
       
       
-        <link rel="next" href="../use-in-agents/">
+        <link rel="next" href="../jetbrains_plugin/">
       
       
         
@@ -23,7 +23,7 @@
     
     
       
-        <title>Includes For Organized Prompts - MARGARITA</title>
+        <title>MCP Server - MARGARITA</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#using-includes-in-python-api" class="md-skip">
+        <a href="#mcp" class="md-skip">
           Skip to content
         </a>
       
@@ -129,7 +129,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Includes For Organized Prompts
+              MCP Server
             
           </span>
         </div>
@@ -670,6 +670,8 @@
                 
   
   
+    
+  
   
   
     
@@ -691,11 +693,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_4" checked>
         
           
           <label class="md-nav__link" for="__nav_1_4" id="__nav_1_4_label" tabindex="">
@@ -716,7 +718,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -731,10 +733,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../mcp/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -750,6 +761,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -795,8 +807,6 @@
                 
   
   
-    
-  
   
   
     
@@ -820,11 +830,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_5" >
         
           
           <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="">
@@ -845,7 +855,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -888,37 +898,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Includes For Organized Prompts
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../includes/" class="md-nav__link">
         
   
   
@@ -934,115 +917,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#basic-include-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Include Usage
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Basic Include Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#supported-parameter-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Parameter Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setting-up-the-renderer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setting Up the Renderer
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nested-includes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Nested Includes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Nested Includes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#understanding-base-path-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Understanding Base Path Resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#practical-tip-organizing-nested-structures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Practical Tip: Organizing Nested Structures
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#real-world-example-multi-agent-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Real-World Example: Multi-Agent System
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1111,103 +985,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#basic-include-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Basic Include Usage
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Basic Include Usage">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#supported-parameter-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Parameter Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#setting-up-the-renderer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Setting Up the Renderer
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nested-includes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Nested Includes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Nested Includes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#understanding-base-path-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Understanding Base Path Resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#practical-tip-organizing-nested-structures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Practical Tip: Organizing Nested Structures
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#real-world-example-multi-agent-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Real-World Example: Multi-Agent System
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1226,149 +1003,9 @@
   
 
 
-<h1 id="using-includes-in-python-api">Using Includes in Python API<a class="headerlink" href="#using-includes-in-python-api" title="Permanent link">&para;</a></h1>
-<p>MARGARITA's include functionality allows you to compose templates from reusable snippets, making it easy to build modular, maintainable prompt libraries.</p>
-<h2 id="basic-include-usage">Basic Include Usage<a class="headerlink" href="#basic-include-usage" title="Permanent link">&para;</a></h2>
-<p>Margarita supports including other template files using the <code>[[ filename ]]</code> syntax.
-When the renderer encounters this directive, it loads and renders the specified file,
-inserting its content into the current template.</p>
-<p>You can also pass parameters to the included template by specifying them as key-value pairs:</p>
-<div class="highlight"><pre><span></span><code>//filename: main.mg
-Welcome to the system!
-[[ header is_admin=True show_menu=False ]]
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>//filename: header.mg
-User Admin Status: ${is_admin}
-Menu Visible: ${show_menu}
-</code></pre></div>
-<p>This will render as:</p>
-<div class="highlight"><pre><span></span><code>Welcome to the system!
-User Admin Status: True
-Menu Visible: False
-</code></pre></div>
-<h4 id="supported-parameter-types">Supported Parameter Types<a class="headerlink" href="#supported-parameter-types" title="Permanent link">&para;</a></h4>
-<blockquote>
-<p>Currently, we only support string or boolean parameters.
-</p>
-</blockquote>
-<h3 id="setting-up-the-renderer">Setting Up the Renderer<a class="headerlink" href="#setting-up-the-renderer" title="Permanent link">&para;</a></h3>
-<p>The key to using includes is setting the <code>base_path</code> parameter when creating a <code>Renderer</code>. This tells MARGARITA where to resolve relative include paths:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">margarita.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parser</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">margarita.renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Renderer</span>
-
-<span class="c1"># Define base path for includes</span>
-<span class="n">template_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./templates&quot;</span><span class="p">)</span>
-
-<span class="c1"># Parse your main template</span>
-<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">()</span>
-<span class="n">template_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">[[ header ]]</span>
-
-<span class="s2">Main content here.</span>
-
-<span class="s2">[[ footer ]]</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">metadata</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_content</span><span class="p">)</span>
-
-<span class="c1"># Create renderer with base_path</span>
-<span class="n">renderer</span> <span class="o">=</span> <span class="n">Renderer</span><span class="p">(</span>
-    <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;app_name&quot;</span><span class="p">:</span> <span class="s2">&quot;MyApp&quot;</span><span class="p">},</span>
-    <span class="n">base_path</span><span class="o">=</span><span class="n">template_dir</span>
-<span class="p">)</span>
-
-<span class="c1"># Render - includes will be resolved relative to base_path</span>
-<span class="n">output</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="nested-includes">Nested Includes<a class="headerlink" href="#nested-includes" title="Permanent link">&para;</a></h2>
-<p>Includes can reference other includes, creating a hierarchy of snippets. <strong>Important</strong>: All include paths are always resolved relative to the <code>base_path</code> set in the renderer, not relative to the file doing the including.</p>
-<h3 id="understanding-base-path-resolution">Understanding Base Path Resolution<a class="headerlink" href="#understanding-base-path-resolution" title="Permanent link">&para;</a></h3>
-<p>Given this directory structure:</p>
-<div class="highlight"><pre><span></span><code>templates/
-  main.mg
-  snippets/
-    complete_prompt.mg
-    header_section.mg
-    system_role.mg
-    safety_guidelines.mg
-    body_section.mg
-    footer_section.mg
-</code></pre></div>
-<p><strong>templates/snippets/complete_prompt.mg</strong>:
-<div class="highlight"><pre><span></span><code>[[ snippets/header_section ]]
-
-[[ snippets/body_section ]]
-
-[[ snippets/footer_section ]]
-</code></pre></div></p>
-<p><strong>templates/snippets/header_section.mg</strong>:
-<div class="highlight"><pre><span></span><code>[[ snippets/system_role ]]
-
-[[ snippets/safety_guidelines ]]
-</code></pre></div></p>
-<p>Notice that even though <code>header_section.mg</code> is in the <code>snippets/</code> directory, it <strong>still uses
-<code>"snippets/system_role.mg"</code></strong> in its include statement, not just <code>"system_role.mg"</code>.
-This is because all paths are resolved from <code>base_path</code>.</p>
-<h3 id="practical-tip-organizing-nested-structures">Practical Tip: Organizing Nested Structures<a class="headerlink" href="#practical-tip-organizing-nested-structures" title="Permanent link">&para;</a></h3>
-<p>Use consistent path prefixes to make nested includes clear:</p>
-<div class="highlight"><pre><span></span><code>templates/
-  prompts/
-    agent/
-      researcher.mg    -&gt; includes &quot;components/agent/...&quot;
-      analyzer.mg      -&gt; includes &quot;components/agent/...&quot;
-  components/
-    agent/
-      role.mg          -&gt; includes &quot;atoms/agent/...&quot;
-      tools.mg         -&gt; includes &quot;atoms/agent/...&quot;
-  atoms/
-    agent/
-      identity.mg
-      capabilities.mg
-</code></pre></div>
-<p>This structure makes it obvious that all includes use the full path from <code>templates/</code>.</p>
-<h2 id="real-world-example-multi-agent-system">Real-World Example: Multi-Agent System<a class="headerlink" href="#real-world-example-multi-agent-system" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>//filename: prompts/agent/researcher.mg
-You are a Researcher Agent.
-
-You have access to the following tools:
-- Web Search
-- Database Query
-
-Output your findings in a structured report.
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>//filename: prompts/agent/analyzer.mg
-You are an Analyzer Agent. You analyze data provided by other agents.
-
-Use statistical methods and visualization tools to derive insights.
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>//filename: agent_router.mg
-
-if type == &quot;researcher&quot;:
-    [[ prompts/agent/researcher ]]
-elif type == &quot;analyzer&quot;:
-    [[ prompts/agent/analyzer ]]
-else:
-    &lt;&lt;You are a General Agent. Adapt to any task given.&gt;&gt;
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">margarita.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parser</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">margarita.renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Renderer</span>
-
-<span class="c1"># Define base path for includes</span>
-<span class="n">template_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;./templates&quot;</span><span class="p">)</span>
-
-<span class="c1"># Parse your main template</span>
-<span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">()</span>
-<span class="n">template_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;[[ agent_router ]]&quot;&quot;&quot;</span>
-<span class="n">metadata</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">template_content</span><span class="p">)</span>
-
-<span class="c1"># Create renderer with base_path</span>
-<span class="n">renderer</span> <span class="o">=</span> <span class="n">Renderer</span><span class="p">(</span>
-    <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;researcher&quot;</span><span class="p">},</span>
-    <span class="n">base_path</span><span class="o">=</span><span class="n">template_dir</span>
-<span class="p">)</span>
-</code></pre></div>
+<h1 id="mcp">MCP<a class="headerlink" href="#mcp" title="Permanent link">&para;</a></h1>
+<p>Margarita has an MCP server that allows you to serve rendered prompts.</p>
+<p><a href="http://github.com/Banyango/margarita-mcp">Check it out here</a></p>
 
 
 
@@ -1398,7 +1035,7 @@ else:
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../basic/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Basic Usage">
+          <a href="../contexts/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contexts">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1408,20 +1045,20 @@ else:
                 Previous
               </span>
               <div class="md-ellipsis">
-                Basic Usage
+                Contexts
               </div>
             </div>
           </a>
         
         
           
-          <a href="../use-in-agents/" class="md-footer__link md-footer__link--next" aria-label="Next: Agentic Loops">
+          <a href="../jetbrains_plugin/" class="md-footer__link md-footer__link--next" aria-label="Next: Jetbrains IDE Plugin">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Agentic Loops
+                Jetbrains IDE Plugin
               </div>
             </div>
             <div class="md-footer__button md-icon">
