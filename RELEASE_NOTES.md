@@ -1,3 +1,15 @@
+# Release Notes - Margarita v0.3.2
+
+**Release Date:** January 31, 2026
+
+More minor fixes to the release process.
+
+# Release Notes - Margarita v0.3.1
+
+**Release Date:** January 31, 2026
+
+Some minor fixes while sorting out the install scripts.
+
 # Release Notes - Margarita v0.3.0
 
 **Release Date:** January 31, 2026
